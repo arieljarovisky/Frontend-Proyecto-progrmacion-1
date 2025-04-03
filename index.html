@@ -1,11 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONTROL DE CAJA</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema POS</title>
+  <!-- Cargar Tailwind CSS desde CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    
+<body class="bg-gray-100 h-screen flex">
+  <!-- SIDEBAR -->
+  <aside class="w-64 bg-white shadow-md h-full">
+    <div class="p-4 text-xl font-bold border-b border-gray-200">Sistema POS</div>
+    <nav class="mt-4">
+      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 block" onclick="showSection('inicio')">
+        Inicio
+      </button>
+      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 block" onclick="showSection('caja')">
+        Caja
+      </button>
+      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 block" onclick="showSection('empleados')">
+        Empleados
+      </button>
+      <button class="w-full text-left px-4 py-2 hover:bg-gray-100 block" onclick="showSection('inventario')">
+        Inventario
+      </button>
+    </nav>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-1 p-6 overflow-auto">
+    <!-- SECCIÓN: INICIO -->
+    <section id="inicio" class="space-y-4">
+      <h1 class="text-2xl font-bold">Panel de Control</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+         <div class="bg-white p-4 rounded shadow">
+           <h2 class="text-gray-500 text-sm">Ventas del Día</h2>
+           <p class="text-2xl font-bold">$2,500</p>
+         </div>
+         <div class="bg-white p-4 rounded shadow">
+           <h2 class="text-gray-500 text-sm">Transacciones</h2>
+           <p class="text-2xl font-bold">45</p>
+         </div>
+         <div class="bg-white p-4 rounded shadow">
+           <h2 class="text-gray-500 text-sm">Empleados Activos</h2>
+           <p class="text-2xl font-bold">8</p>
+         </div>
+         <div class="bg-white p-4 rounded shadow">
+           <h2 class="text-gray-500 text-sm">Productos</h2>
+           <p class="text-2xl font-bold">150</p>
+         </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: CAJA -->
+    <section id="caja" class="hidden">
+      <h1 class="text-2xl font-bold mb-4">Caja</h1>
+      <div class="flex flex-col md:flex-row gap-4">
+        <!-- LISTADO DE PRODUCTOS -->
+        <div class="w-full md:w-3/4">
+          <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+        <!-- RESUMEN DE VENTA / CARRITO -->
+        <div class="w-full md:w-1/4 bg-white p-4 rounded shadow flex flex-col">
+          <h2 class="text-xl font-bold mb-4">Resumen de Venta</h2>
+          <div id="cartSummary" class="flex-1 overflow-auto">
+            <!-- Se inyectarán los ítems del carrito -->
+          </div>
+          <div class="mt-4">
+            <p class="mb-2">Total: <span id="cartTotal" class="font-bold">$0.00</span></p>
+            <button onclick="finalizeSale()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full">
+              Finalizar Venta
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: EMPLEADOS -->
+    <section id="empleados" class="hidden">
+      <h1 class="text-2xl font-bold mb-4">Empleados</h1>
+      <!-- Tabla de empleados -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b">Nombre</th>
+              <th class="py-2 px-4 border-b">Apellido</th>
+              <th class="py-2 px-4 border-b">ID</th>
+              <th class="py-2 px-4 border-b">Documento</th>
+              <th class="py-2 px-4 border-b">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTable"></tbody>
+        </table>
+      </div>
+      <!-- Formulario para agregar empleado -->
+      <div class="mt-4">
+        <h2 class="text-xl font-semibold">Agregar Empleado</h2>
+        <form id="employeeForm" class="mt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <input type="text" id="firstName" placeholder="Nombre" required class="border border-gray-300 rounded p-2" />
+            <input type="text" id="lastName" placeholder="Apellido" required class="border border-gray-300 rounded p-2" />
+            <input type="text" id="employeeID" placeholder="ID" required class="border border-gray-300 rounded p-2" />
+            <input type="text" id="document" placeholder="Documento" required class="border border-gray-300 rounded p-2" />
+          </div>
+          <button type="submit" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+            Agregar Empleado
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: INVENTARIO -->
+    <section id="inventario" class="hidden">
+      <h1 class="text-2xl font-bold mb-4">Inventario</h1>
+      <p>Aquí se muestra la información de stock y productos.</p>
+    </section>
+  </main>
+  <!-- Cargar script externo -->
+  <script src="js/index.js"></script>
 </body>
 </html>
