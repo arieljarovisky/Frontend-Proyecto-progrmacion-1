@@ -1,19 +1,32 @@
-// ---------------------
-// Función para mostrar secciones
-// ---------------------
-function showSection(sectionId) {
-    const sections = ['inicio', 'caja', 'empleados', 'inventario'];
-    sections.forEach(sec => {
-      document.getElementById(sec).classList.add('hidden');
-    });
-    document.getElementById(sectionId).classList.remove('hidden');
-  
-    // Si se muestra la sección "Caja", renderizamos los productos y el carrito
-    if (sectionId === 'caja') {
-      renderProducts();
-      renderCart();
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  const logueado = localStorage.getItem('logueado');
+  if (logueado !== 'true') {
+    alert('Acceso denegado. Iniciá sesión primero.');
+    window.location.href = '../pages/login.html'; // Ruta al login
   }
+});
+
+function showSection(sectionId) {
+  // Verificar si el usuario está logueado
+  const logueado = localStorage.getItem('logueado');
+  if (logueado !== 'true') {
+    alert('Necesitás iniciar sesión primero');
+    window.location.href = '../pages/login.html';  // Cambiá esto si tu ruta es distinta
+    return;
+  }
+
+  const sections = ['inicio', 'caja', 'empleados', 'inventario'];
+  sections.forEach(sec => {
+    document.getElementById(sec).classList.add('hidden');
+  });
+  document.getElementById(sectionId).classList.remove('hidden');
+
+  // Si se muestra la sección "Caja", renderizamos los productos y el carrito
+  if (sectionId === 'caja') {
+    renderProducts();
+    renderCart();
+  }
+}
   
   // ---------------------
   // Gestión de Productos y Carrito (Sección Caja)
