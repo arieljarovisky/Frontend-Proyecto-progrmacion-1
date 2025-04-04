@@ -11,16 +11,20 @@ loginForm.addEventListener('submit', async function(event) {
 
     // Enviar los datos al backend usando fetch
     try {
-        const response = await fetch('http://10.100.33.109:5000/login', {
+        const response = await fetch('http://192.168.1.8:5000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email, contrasena })
         });
-        console.log(response);
+
         const data = await response.json();
         if (response.ok) {
+            // Guardar estado de login en localStorage
+            localStorage.setItem('logueado', 'true');
+            localStorage.setItem('email', email); // si querés guardar también el mail
+
             alert('¡Login exitoso!');
             window.location.href = '../index.html';  // Redirige a la página principal
         } else {
@@ -35,10 +39,8 @@ loginForm.addEventListener('submit', async function(event) {
     loginForm.reset();
 });
 
-
 // Función para manejar el clic en el botón de registro
 registerBtn.addEventListener('click', function() {
     alert('Redirigiendo al formulario de registro...');
-    // Aquí podrías redirigir a otra página de registro
     window.location.href = "/registro";  // Cambia la URL de acuerdo a tus necesidades
 });
