@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos | Caja Plus</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white p-4 border-r border-gray-200 min-h-screen">
+            <h1 class="text-2xl font-bold mb-6 text-blue-600">Caja Plus</h1>
+            <nav class="flex flex-col gap-2">
+                <a href="index.html"
+                    class="w-full text-left block bg-white text-gray-700 py-2 px-4 rounded hover:bg-blue-100">Inicio</a>
+                <a href="index.html"
+                    class="w-full text-left block bg-white text-gray-700 py-2 px-4 rounded hover:bg-blue-100">Caja</a>
+                <a href="index.html"
+                    class="w-full text-left block bg-white text-gray-700 py-2 px-4 rounded hover:bg-blue-100">Historial</a>
+                <a href="productos.html"
+                    class="w-full text-left block bg-blue-500 text-white py-2 px-4 rounded">Productos</a>
+                <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded">Modo Claro/Oscuro</button>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-grow p-4">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Listado de Productos</h2>
+            <!-- Filtro de productos -->
+            <div class="mb-4">
+                <input type="text" id="filtroProductos" placeholder="Buscar productos..."
+                    class="w-full p-2 border border-gray-300 rounded">
+            </div>
+
+            <!-- Contenedor de tarjetas de productos -->
+            <div id="contenedorProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Las tarjetas de productos se van a renderizar aquí dinámicamente -->
+            </div>
+
+        </main>
+    </div>
+    <footer class="bg-blue-600 text-white text-center p-2 text-sm">
+        &copy; 2025 Caja Plus - Todos los derechos reservados
+    </footer>
+
+
+    <!-- Cargar script externo para manejar los productos -->
+    <script src="js/productos.js"></script>
+</body>
+
+</html>
