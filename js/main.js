@@ -38,31 +38,41 @@ function updateBalanceDisplay(balance) {
     }
 }
 
-// Función para cargar métricas simuladas en el dashboard
-function initDashboard() {
-    // Datos simulados
-    const ventasCantidad = 8;
-    const ventasTotal = 25000;
-    const pagosCantidad = 3;
-    const pagosTotal = 70000;
-    const balance = ventasTotal - pagosTotal;
+async function initDashboard() {
+    try {
+        const response = await fetch('http://localhost:5000/api/ventas/compras');
+        if (!response.ok) {
+            throw new Error('Error al cargar las ventas');
+        }
+        const ventas = await response.json();
 
-    // Actualizar métricas
-    document.getElementById('ventasResumen').textContent = `${ventasCantidad} ventas / $${ventasTotal}`;
-    document.getElementById('pagosResumen').textContent = `${pagosCantidad} pagos / $${pagosTotal}`;
+        const ventasCantidad = ventas.length;
+        const ventasTotal = ventas.reduce((total, venta) => total + venta.total, 0);
 
-    updateBalanceDisplay(balance);
+        const pagosCantidad = 0; // Simulado temporalmente
+        const pagosTotal = 0;    // Simulado temporalmente
+        const balance = ventasTotal - pagosTotal;
 
-    // Stock bajo simulado
-    const stockBajoProductos = ['Producto A', 'Producto B', 'Producto C'];
-    const stockBajoUl = document.getElementById('stockBajo');
-    stockBajoUl.innerHTML = '';
-    stockBajoProductos.forEach(producto => {
-        const li = document.createElement('li');
-        li.textContent = producto;
-        stockBajoUl.appendChild(li);
-    });
+        document.getElementById('ventasResumen').textContent = `${ventasCantidad} ventas / $${ventasTotal}`;
+        document.getElementById('pagosResumen').textContent = `${pagosCantidad} pagos / $${pagosTotal}`;
+
+        updateBalanceDisplay(balance);
+
+        // Stock bajo simulado (todavía no conectado)
+        const stockBajoProductos = ['Producto A', 'Producto B', 'Producto C'];
+        const stockBajoUl = document.getElementById('stockBajo');
+        stockBajoUl.innerHTML = '';
+        stockBajoProductos.forEach(producto => {
+            const li = document.createElement('li');
+            li.textContent = producto;
+            stockBajoUl.appendChild(li);
+        });
+
+    } catch (error) {
+        console.error('Error al inicializar el dashboard:', error);
+    }
 }
+
 
 // Inicializar cuando cargue el documento
 window.addEventListener('DOMContentLoaded', () => {
