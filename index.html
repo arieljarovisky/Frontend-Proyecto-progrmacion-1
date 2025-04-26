@@ -36,26 +36,8 @@
   <main class="flex-1 p-6 overflow-auto">
     <!-- INICIO -->
     <section id="inicio">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Panel de Control</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div id="balanceCaja" class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-gray-500 text-sm">Balance de Caja</h3>
-          <p id="balanceValor" class="text-2xl font-bold">$0</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-gray-500 text-sm">Ventas del Día</h3>
-          <p id="ventasResumen" class="text-2xl font-bold">0 ventas / $0</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-gray-500 text-sm">Pagos del Día</h3>
-          <p id="pagosResumen" class="text-2xl font-bold">0 pagos / $0</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-gray-500 text-sm">Alertas de Stock Bajo</h3>
-          <ul id="stockBajo" class="text-gray-700 text-sm mt-2 space-y-1">
-            <!-- Productos con bajo stock se cargarán aquí -->
-          </ul>
-        </div>
+      <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+       
       </div>
     </section>
 
@@ -109,6 +91,7 @@
     </section>
   </main>
   <!-- Cargar scripts externos -->
+  <script src="js/metricas.js"></script>
   <script src="js/productos.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
