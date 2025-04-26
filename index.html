@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,20 +8,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="js/index.js"></script>
 </head>
+
 <body class="flex h-screen bg-gray-100">
   <!-- Sidebar -->
   <aside class="w-64 bg-white shadow-lg p-4 flex flex-col justify-between">
     <div>
       <h1 class="text-2xl font-bold mb-6 text-blue-600">Caja Plus</h1>
       <nav class="space-y-2">
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded" onclick="showSection('inicio')">Inicio</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded" onclick="showSection('nuevaVenta')">Nueva Venta</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded" onclick="showSection('caja')">Caja</button>
-        <a href="productos.html" class="w-full text-left block bg-white text-gray-700 py-2 px-4 rounded hover:bg-blue-100">
-          Productos
-        </a>
-        
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded" onclick="showSection('historial')">Historial</button>
+        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('inicio')">Inicio</button>
+        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('nuevaVenta')">Nueva Venta</button>
+        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('caja')">Caja</button>
+        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('productos')">productos</button>
+
+        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('historial')">Historial</button>
         <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded">Modo Claro/Oscuro</button>
       </nav>
     </div>
@@ -66,8 +71,10 @@
       <div class="flex justify-between items-center mb-4">
         <div id="balanceDia" class="text-lg font-bold">Balance: $0</div>
         <div>
-          <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded mr-2" onclick="alert('Registrar nueva venta')">Nueva Venta</button>
-          <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded" onclick="alert('Registrar nuevo pago')">Nuevo Pago</button>
+          <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded mr-2"
+            onclick="alert('Registrar nueva venta')">Nueva Venta</button>
+          <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
+            onclick="alert('Registrar nuevo pago')">Nuevo Pago</button>
         </div>
       </div>
       <div class="mb-4">
@@ -84,7 +91,15 @@
     <!-- PRODUCTOS -->
     <section id="productos" class="hidden">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Productos</h2>
-      <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Listado de Productos</h2>
+      <div class="mb-4">
+        <input type="text" id="filtroProductos" placeholder="Buscar productos..."
+          class="w-full p-2 border border-gray-300 rounded">
+      </div>
+      <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+
+      </div>
     </section>
 
     <!-- HISTORIAL -->
@@ -94,7 +109,9 @@
     </section>
   </main>
   <!-- Cargar scripts externos -->
+  <script src="js/productos.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
 </body>
+
 </html>
