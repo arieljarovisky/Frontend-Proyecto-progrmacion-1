@@ -1,81 +1,98 @@
 // Función para mostrar la sección seleccionada y ocultar las demás
 function showSection(sectionId) {
-    const sections = document.querySelectorAll('main > section');
-    const buttons = document.querySelectorAll('aside button');
+  const sections = document.querySelectorAll("main > section");
+  const buttons = document.querySelectorAll("aside button");
 
-    sections.forEach(section => {
-        if (section.id === sectionId) {
-            section.classList.remove('hidden');
-        } else {
-            section.classList.add('hidden');
-        }
-    });
+  sections.forEach((section) => {
+    if (section.id === sectionId) {
+      section.classList.remove("hidden");
+    } else {
+      section.classList.add("hidden");
+    }
+  });
 
-    buttons.forEach(button => {
-        if (button.getAttribute('onclick')?.includes(sectionId)) {
-            button.classList.add('bg-blue-500', 'text-white');
-            button.classList.remove('text-gray-700', 'hover:bg-blue-100');
-        } else {
-            button.classList.remove('bg-blue-500', 'text-white');
-            button.classList.add('text-gray-700', 'hover:bg-blue-100');
-        }
-    });
+  buttons.forEach((button) => {
+    if (button.getAttribute("onclick")?.includes(sectionId)) {
+      button.classList.add("bg-blue-500", "text-white");
+      button.classList.remove("text-gray-700", "hover:bg-blue-100");
+    } else {
+      button.classList.remove("bg-blue-500", "text-white");
+      button.classList.add("text-gray-700", "hover:bg-blue-100");
+    }
+  });
+  initDashboard();
 }
 
 // Función para actualizar el color del balance
 function updateBalanceDisplay(balance) {
-    const balanceCaja = document.getElementById('balanceCaja');
-    const balanceValor = document.getElementById('balanceValor');
+  const balanceCaja = document.getElementById("balanceCaja");
+  const balanceValor = document.getElementById("balanceValor");
 
-    balanceValor.textContent = `$${balance}`;
+  balanceValor.textContent = `$${balance}`;
 
-    if (balance >= 0) {
-        balanceCaja.classList.remove('bg-red-200', 'text-red-800');
-        balanceCaja.classList.add('bg-green-200', 'text-green-800');
-    } else {
-        balanceCaja.classList.remove('bg-green-200', 'text-green-800');
-        balanceCaja.classList.add('bg-red-200', 'text-red-800');
-    }
+  if (balance >= 0) {
+    balanceCaja.classList.remove("bg-red-200", "text-red-800");
+    balanceCaja.classList.add("bg-green-200", "text-green-800");
+  } else {
+    balanceCaja.classList.remove("bg-green-200", "text-green-800");
+    balanceCaja.classList.add("bg-red-200", "text-red-800");
+  }
 }
 
 async function initDashboard() {
-    try {
-        const response = await fetch('http://localhost:5000/api/ventas/compras');
-        if (!response.ok) {
-            throw new Error('Error al cargar las ventas');
-        }
-        const ventas = await response.json();
+  const contenedor = document.getElementById("metricas");
 
-        const ventasCantidad = ventas.length;
-        const ventasTotal = ventas.reduce((total, venta) => total + venta.total, 0);
+  try {
+    const response = await fetch("http://192.168.1.8:5000/api/ventas/metricas");
+    const data = await response.json();
 
-        const pagosCantidad = 0; // Simulado temporalmente
-        const pagosTotal = 0;    // Simulado temporalmente
-        const balance = ventasTotal - pagosTotal;
-
-        document.getElementById('ventasResumen').textContent = `${ventasCantidad} ventas / $${ventasTotal}`;
-        document.getElementById('pagosResumen').textContent = `${pagosCantidad} pagos / $${pagosTotal}`;
-
-        updateBalanceDisplay(balance);
-
-        // Stock bajo simulado (todavía no conectado)
-        const stockBajoProductos = ['Producto A', 'Producto B', 'Producto C'];
-        const stockBajoUl = document.getElementById('stockBajo');
-        stockBajoUl.innerHTML = '';
-        stockBajoProductos.forEach(producto => {
-            const li = document.createElement('li');
-            li.textContent = producto;
-            stockBajoUl.appendChild(li);
-        });
-
-    } catch (error) {
-        console.error('Error al inicializar el dashboard:', error);
+    if (!response.ok) {
+      contenedor.innerHTML = `
+          <div class="text-red-600 font-semibold text-center">
+            ❌ Error al cargar métricas: ${data.error || "Desconocido"}
+          </div>`;
+      return;
     }
+
+    contenedor.innerHTML = `
+        <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+          <p class="font-semibold">Total de Ventas:</p>
+          <p class="text-xl">${data.total_ventas}</p>
+        </div>
+  
+        <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+          <p class="font-semibold">Total de Ítems Vendidos:</p>
+          <p class="text-xl">${data.total_items}</p>
+        </div>
+  
+        <div class="bg-green-100 p-4 rounded-lg shadow-md">
+          <p class="font-semibold">Producto más vendido:</p>
+          <p class="text-xl">${data.producto_mas_vendido.nombre}</p>
+          <p class="text-xl">Cantidad: ${data.producto_mas_vendido.cantidad}</p>
+        </div>
+  
+        <div class="bg-yellow-100 p-4 rounded-lg shadow-md">
+          <p class="font-semibold">Ventas por Día:</p>
+          <ul class="list-disc pl-5 space-y-1">
+            ${Object.entries(data.ventas_por_dia)
+              .map(
+                ([fecha, cantidad]) =>
+                  `<li>${fecha}: <span class="font-medium">${cantidad} ventas</span></li>`
+              )
+              .join("")}
+          </ul>
+        </div>
+      `;
+  } catch (error) {
+    contenedor.innerHTML = `
+        <div class="text-red-600 font-semibold text-center">
+          ⚠️ Error de conexión: ${error.message}
+        </div>`;
+  }
 }
 
-
 // Inicializar cuando cargue el documento
-window.addEventListener('DOMContentLoaded', () => {
-    showSection('inicio'); // Mostrar panel de control al iniciar
-    initDashboard();       // Cargar métricas simuladas
+window.addEventListener("DOMContentLoaded", () => {
+  showSection("inicio"); // Mostrar panel de control al iniciar
+  initDashboard(); // Cargar métricas simuladas
 });

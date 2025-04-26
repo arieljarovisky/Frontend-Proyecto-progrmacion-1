@@ -37,15 +37,35 @@
     <!-- INICIO -->
     <section id="inicio">
       <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-       
+
       </div>
     </section>
 
     <!-- NUEVA VENTA -->
     <section id="nuevaVenta" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Nueva Venta</h2>
-      <p>Sección para cargar una nueva venta (en construcción)</p>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Venta</h2>
+
+      <!-- Lista dinámica de productos -->
+      <form id="ventaForm" class="space-y-6">
+        <div id="productosContainer" class="space-y-4">
+          <!-- Aquí se agregan los productos dinámicamente -->
+        </div>
+
+        <!-- Botón para agregar más productos -->
+        <button type="button" id="agregarProducto" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+          + Agregar Producto
+        </button>
+
+        <!-- Botón para registrar la venta -->
+        <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mt-4">
+          Registrar Venta
+        </button>
+      </form>
+
+      <!-- Mensaje de éxito o error -->
+      <div id="mensaje" class="mt-6 text-center font-medium"></div>
     </section>
+
 
     <!-- CAJA -->
     <section id="caja" class="hidden">
@@ -91,7 +111,7 @@
     </section>
   </main>
   <!-- Cargar scripts externos -->
-  <script src="js/metricas.js"></script>
+  <script src="js/ventas.js"></script>
   <script src="js/productos.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
