@@ -35,7 +35,7 @@ function filtrarProductos(productos) {
 // Función para inicializar todo
 async function initProductos() {
     try {
-        const response = await fetch('http://localhost:5000/api/productos');
+        const response = await fetch(`${API_BASE_URL}/api/productos`);
         if (!response.ok) {
             throw new Error('Error al cargar los productos');
         }

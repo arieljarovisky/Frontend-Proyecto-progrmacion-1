@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Traer productos del backend
   async function obtenerProductos() {
     try {
-      const res = await fetch("http://192.168.1.8:5000/api/productos");
+      const res = await fetch(`${API_BASE_URL}/api/productos`);
       productosDisponibles = await res.json();
       if (!res.ok) throw new Error("Error al obtener productos");
       agregarProducto(); // Agregar el primer producto al inicio
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const res = await fetch("http://192.168.1.8:5000/api/ventas/compras", {
+      const res = await fetch(`${API_BASE_URL}/api/ventas/compras`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(ventaData),

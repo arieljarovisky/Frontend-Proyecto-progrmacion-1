@@ -4,7 +4,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const email = document.getElementById("email").value.trim().toLowerCase();
     const contrasena = document.getElementById("contrasena").value.trim();
   
-    const respuesta = await fetch("http://192.168.1.8:5000/api/usuarios/login", {
+    const respuesta = await fetch(`${API_BASE_URL}/api/usuarios/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

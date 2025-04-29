@@ -43,7 +43,7 @@ async function initDashboard() {
   const contenedor = document.getElementById("metricas");
 
   try {
-    const response = await fetch("http://192.168.1.8:5000/api/ventas/metricas");
+    const response = await fetch(`${API_BASE_URL}/api/ventas/metricas`);
     const data = await response.json();
 
     if (!response.ok) {

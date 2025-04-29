@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let movimientos = [];
   
     function cargarCaja() {
-      fetch("http://192.168.1.8:5000/api/caja")
+      fetch(`${API_BASE_URL}/api/caja`)
         .then((res) => res.json())
         .then((data) => {
           movimientos = data.movimientos || [];
