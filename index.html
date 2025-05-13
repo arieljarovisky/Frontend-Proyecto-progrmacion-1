@@ -44,24 +44,25 @@
     <!-- NUEVA VENTA -->
     <section id="nuevaVenta" class="hidden">
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Venta</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Seleccioná los productos</h2>
+    
+      <input id="filtroProductos" type="text" placeholder="Buscar productos..." class="mb-4 p-2 border rounded w-full" />
+      <form id="ventaForm" class="flex gap-6 flex-col lg:flex-row">
+        <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
 
-      <!-- Lista dinámica de productos -->
-      <form id="ventaForm" class="space-y-6">
-        <div id="productosContainer" class="space-y-4">
-          <!-- Aquí se agregan los productos dinámicamente -->
+        <!-- Derecha: Productos seleccionados -->
+        <div class="w-full lg:w-1/3">
+          
+          <h3 class="text-lg font-semibold mb-2">Productos seleccionados</h3>
+          <div id="productosSeleccionados" class="flex flex-col  max-h-[400px]  border rounded p-2">
+          </div>
+          <p class="mt-4 text-lg font-bold">Total: $<span id="totalCompra">0</span></p>
+
+          <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">
+            Confirmar Venta
+          </button>
         </div>
-
-        <!-- Botón para agregar más productos -->
-        <button type="button" id="agregarProducto" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-          + Agregar Producto
-        </button>
-
-        <!-- Botón para registrar la venta -->
-        <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mt-4">
-          Registrar Venta
-        </button>
       </form>
-
       <!-- Mensaje de éxito o error -->
       <div id="mensaje" class="mt-6 text-center font-medium"></div>
     </section>
@@ -112,7 +113,7 @@
   </main>
   <!-- Cargar scripts externos -->
   <script src="js/config.js"></script>
-   <script src="js/caja.js"></script>
+  <script src="js/caja.js"></script>
   <script src="js/ventas.js"></script>
   <script src="js/productos.js"></script>
   <script src="js/main.js"></script>
