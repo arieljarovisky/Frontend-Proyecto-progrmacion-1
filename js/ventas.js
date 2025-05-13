@@ -1,70 +1,135 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const productosContainer = document.getElementById("productosContainer");
-  const agregarProductoBtn = document.getElementById("agregarProducto");
+  const productosCardsContainer = document.getElementById("productosContainer"); // donde se mostrarán las cards
+  const seleccionadosContainer = document.getElementById(
+    "productosSeleccionados"
+  ); // contenedor para productos seleccionados
   const ventaForm = document.getElementById("ventaForm");
   const mensajeDiv = document.getElementById("mensaje");
   const nuevaVentaSection = document.getElementById("nuevaVenta");
 
   let productosDisponibles = [];
+  let productosSeleccionados = [];
 
-  // Mostrar sección
   nuevaVentaSection.classList.remove("hidden");
 
-  // Traer productos del backend
   async function obtenerProductos() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/productos`);
       productosDisponibles = await res.json();
       if (!res.ok) throw new Error("Error al obtener productos");
-      agregarProducto(); // Agregar el primer producto al inicio
+      renderizarCards();
     } catch (err) {
       mensajeDiv.textContent = err.message;
       mensajeDiv.className = "text-red-500";
     }
   }
+  function filtrarProductos() {
+    const input = document.getElementById("filtroProductos");
 
-  // Crear un selector de producto + cantidad
-  function crearProductoSelect() {
+    input.addEventListener("input", () => {
+      console.log("Filtrando productos...");
+      const texto = input.value.toLowerCase();
+      const productosFiltrados = productosDisponibles.filter((producto) =>
+        producto.nombre.toLowerCase().includes(texto)
+      );
+      renderizarCards(productosFiltrados);
+    });
+  }
+
+  // Renderizar productos como cards
+  function renderizarCards(lista = productosDisponibles) {
+    productosCardsContainer.innerHTML = "";
+
+    lista.forEach((producto) => {
+      const card = document.createElement("div");
+      card.className = `
+      w-40 bg-white border border-gray-200 rounded-xl shadow-md p-4 m-2 
+      hover:shadow-lg hover:scale-105 transition-transform duration-300
+      flex flex-col justify-between
+    `;
+
+      card.innerHTML = `
+      <div>
+        <h3 class="text-md font-semibold text-gray-800">${producto.nombre}</h3>
+        <p class="text-gray-600 mt-1 mb-2">Talle: <span class="font-medium text-black-600">${producto.talle}</span></p>
+        <p class="text-gray-600 mt-1 mb-2">Precio: <span class="font-medium text-green-600">$${producto.precio}</span></p>
+      </div>
+      <button type="button" class="mt-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+       Agregar
+      </button>
+    `;
+
+      card.querySelector("button").onclick = () => agregarProducto(producto);
+
+      productosCardsContainer.appendChild(card);
+    });
+  }
+
+  function actualizarTotal() {
+    let total = 0;
+    seleccionadosContainer.querySelectorAll("div").forEach((div) => {
+      const id = parseInt(div.dataset.productoId);
+      const cantidad = parseInt(div.querySelector("input")?.value);
+      const producto = productosDisponibles.find((p) => p.id === id);
+      if (producto && cantidad > 0) {
+        total += producto.precio * cantidad;
+      }
+    });
+
+    document.getElementById("totalCompra").textContent = total.toFixed(2);
+  }
+
+  // Agregar producto seleccionado
+  function agregarProducto(producto) {
+    const yaAgregado = productosSeleccionados.find((p) => p.id === producto.id);
+    if (yaAgregado) {
+      const wrapperExistente = seleccionadosContainer.querySelector(
+        `div[data-producto-id="${producto.id}"]`
+      );
+      const inputCantidad = wrapperExistente.querySelector("input");
+      inputCantidad.value = parseInt(inputCantidad.value) + 1;
+      mensajeDiv.textContent = ""; // Limpiar mensaje si existía uno previo
+      actualizarTotal();
+      return;
+    }
+
     const wrapper = document.createElement("div");
-    wrapper.className = "flex items-center gap-4";
+    wrapper.className = "flex items-center gap-4 my-2";
+    wrapper.dataset.productoId = producto.id;
 
-    const select = document.createElement("select");
-    select.className = "w-full px-3 py-2 border rounded";
-    select.name = "producto";
-    select.innerHTML =
-      `<option value="">Seleccione un producto</option>` +
-      productosDisponibles
-        .map(
-          (p) => `<option value="${p.id}">${p.nombre} - $${p.precio}</option>`
-        )
-        .join("");
+    const label = document.createElement("span");
+    label.textContent = `${producto.nombre} - $${producto.precio}`;
+    label.className = "w-64";
 
     const input = document.createElement("input");
     input.type = "number";
     input.min = "1";
+    input.value = "1";
     input.placeholder = "Cantidad";
-    input.className = "w-32 px-3 py-2 border rounded";
+    input.className = "w-24 px-3 py-2 border rounded";
+    input.addEventListener("input", actualizarTotal);
     input.name = "cantidad";
 
     const removeBtn = document.createElement("button");
     removeBtn.type = "button";
     removeBtn.textContent = "🗑️";
     removeBtn.className = "text-red-600 hover:text-red-800 font-bold text-lg";
-    removeBtn.onclick = () => wrapper.remove();
+    removeBtn.onclick = () => {
+      wrapper.remove();
+      productosSeleccionados = productosSeleccionados.filter(
+        (p) => p.id !== producto.id
+      );
+      actualizarTotal();
+    };
 
-    wrapper.appendChild(select);
+    wrapper.appendChild(label);
     wrapper.appendChild(input);
     wrapper.appendChild(removeBtn);
 
-    return wrapper;
+    seleccionadosContainer.appendChild(wrapper);
+    productosSeleccionados.push(producto);
+    actualizarTotal();
   }
-
-  // Agregar un nuevo producto al form
-  function agregarProducto() {
-    productosContainer.appendChild(crearProductoSelect());
-  }
-
-  agregarProductoBtn.addEventListener("click", () => agregarProducto());
 
   // Enviar formulario de venta
   ventaForm.addEventListener("submit", async (e) => {
@@ -73,22 +138,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const items = [];
     let valido = true;
 
-    productosContainer.querySelectorAll("div").forEach((div) => {
-      const id = div.querySelector("select")?.value;
+    seleccionadosContainer.querySelectorAll("div").forEach((div) => {
+      const id = parseInt(div.dataset.productoId);
       const cantidad = parseInt(div.querySelector("input")?.value);
 
       if (!id || !cantidad || cantidad < 1) {
         valido = false;
       } else {
-        const producto = productosDisponibles.find(
-          (p) => p.id === parseInt(id)
-        );
+        const producto = productosDisponibles.find((p) => p.id === id);
         if (producto) {
-          items.push({
-            id: producto.id,
-            nombre: producto.nombre, // 👈 Se agrega el nombre aquí
-            cantidad,
-          });
+          items.push({ id: producto.id, nombre: producto.nombre, cantidad });
         }
       }
     });
@@ -101,18 +160,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let total = 0;
-
-    items.forEach(item => {
-      const producto = productosDisponibles.find(p => p.id === item.id);
-      if (producto) {
-        total += producto.precio * item.cantidad;
-      }
+    items.forEach((item) => {
+      const producto = productosDisponibles.find((p) => p.id === item.id);
+      if (producto) total += producto.precio * item.cantidad;
     });
-    
-    const ventaData = {
-      items,
-      total
-    };
+
+    const ventaData = { items, total };
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/ventas/compras`, {
@@ -122,14 +175,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || "Error al registrar la venta");
 
       mensajeDiv.textContent = `✅ Venta registrada correctamente (ID: ${data.venta_id})`;
       mensajeDiv.className = "text-green-600";
-
-      productosContainer.innerHTML = "";
-      agregarProducto(); // resetear formulario
+      seleccionadosContainer.innerHTML = "";
+      productosSeleccionados = [];
+      actualizarTotal();
     } catch (err) {
       mensajeDiv.textContent = `❌ ${err.message}`;
       mensajeDiv.className = "text-red-500";
@@ -137,4 +189,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   obtenerProductos();
+  async function initProductos() {
+    try {
+      await obtenerProductos(); // esto ya llama a renderizarCards()
+      filtrarProductos();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  initProductos();
 });
