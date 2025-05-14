@@ -20,6 +20,8 @@ function showSection(sectionId) {
       button.classList.add("text-gray-700", "hover:bg-blue-100");
     }
   });
+
+  localStorage.setItem("ultimaSeccion", sectionId); // ✅ Guardar la última sección
   initDashboard();
 }
 
@@ -93,6 +95,7 @@ async function initDashboard() {
 
 // Inicializar cuando cargue el documento
 window.addEventListener("DOMContentLoaded", () => {
-  showSection("inicio"); // Mostrar panel de control al iniciar
+  const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
+  showSection(ultima);
   initDashboard(); // Cargar métricas simuladas
 });
