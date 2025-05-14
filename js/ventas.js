@@ -43,10 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
     lista.forEach((producto) => {
       const card = document.createElement("div");
       card.className = `
-      w-40 bg-white border border-gray-200 rounded-xl shadow-md p-4 m-2 
+      w-40 h-60 bg-white border border-gray-200 rounded-xl shadow-md p-4 m-2 
       hover:shadow-lg hover:scale-105 transition-transform duration-300
       flex flex-col justify-between
-    `;
+      `;
 
       card.innerHTML = `
       <div>
