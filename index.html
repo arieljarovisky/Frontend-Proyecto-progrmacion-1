@@ -26,6 +26,8 @@
         <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
           onclick="showSection('historial')">Historial</button>
         <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded">Modo Claro/Oscuro</button>
+        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('nuevaCompra')">Nueva Compra</button>
       </nav>
     </div>
     <footer class="text-sm text-gray-400">&copy; 2025 Caja Plus</footer>
@@ -44,14 +46,15 @@
     <section id="nuevaVenta" class="hidden">
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Venta</h2>
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Seleccioná los productos</h2>
-    
-      <input id="filtroProductos" type="text" placeholder="Buscar productos..." class="mb-4 p-2 border rounded w-full" />
+
+      <input id="filtroProductos" type="text" placeholder="Buscar productos..."
+        class="mb-4 p-2 border rounded w-full" />
       <form id="ventaForm" class="flex gap-6 flex-col lg:flex-row">
         <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
 
         <!-- Derecha: Productos seleccionados -->
         <div class="w-full lg:w-1/3">
-          
+
           <h3 class="text-lg font-semibold mb-2">Productos seleccionados</h3>
           <div id="productosSeleccionados" class="flex flex-col  max-h-[400px]  border rounded p-2">
           </div>
@@ -90,6 +93,31 @@
       <p>Listado de movimientos del día (en construcción)</p>
     </section>
 
+    <!-- NUEVA COMPRA -->
+    <section id="nuevaCompra" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Compra</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Seleccioná los productos a comprar</h2>
+
+      <input id="filtroCompraProductos" type="text" placeholder="Buscar productos..."
+        class="mb-4 p-2 border rounded w-full" />
+      <form id="compraForm" class="flex gap-6 flex-col lg:flex-row">
+        <div id="compraProductosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
+
+        <!-- Derecha: Productos seleccionados -->
+        <div class="w-full lg:w-1/3">
+          <h3 class="text-lg font-semibold mb-2">Productos seleccionados</h3>
+          <div id="compraSeleccionados" class="flex flex-col max-h-[400px] border rounded p-2"></div>
+          <p class="mt-4 text-lg font-bold">Total Compra: $<span id="totalCompraCompra">0</span></p>
+
+          <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+            Confirmar Compra
+          </button>
+        </div>
+      </form>
+
+      <div id="mensajeCompra" class="mt-6 text-center font-medium"></div>
+    </section>
+
     <!-- PRODUCTOS -->
     <section id="productos" class="hidden">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Productos</h2>
@@ -111,8 +139,11 @@
     </section>
   </main>
   <!-- Cargar scripts externos -->
+
+  <script src="js/compras.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 📊 Chart.js para los gráficos -->
-  <script src="/js/charts.js"></script>
+  <script src="js/charts.js"></script>
   <script src="js/config.js"></script>
   <script src="js/caja.js"></script>
   <script src="js/ventas.js"></script>
