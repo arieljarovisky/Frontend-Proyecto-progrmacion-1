@@ -61,7 +61,7 @@ async function initDashboard() {
 
     // Tarjeta Balance
     // Balance real usando ingresos y pagos
-    const balance = data.total_ingresos - data.total_pagos;
+    const balance = data.total_ingresos - data.total_egresos;
 
     const divBalance = document.createElement("div");
     divBalance.className = "bg-white shadow rounded p-4";
@@ -82,7 +82,7 @@ async function initDashboard() {
       <h3 class="text-gray-600 text-sm">Total Ventas</h3>
       <p class="text-xl font-semibold">${data.total_ventas}</p>
       <h3 class="text-gray-600 text-sm mt-2">Total Pagos</h3>
-      <p class="text-xl font-semibold">1</p>
+      <p class="text-xl font-semibold">${data.total_pagos}</p>
     `;
     contenedor.appendChild(ventasPagos);
 
