@@ -21,8 +21,6 @@ function showSection(sectionId) {
       button.classList.add("text-gray-700", "hover:bg-blue-100");
     }
   });
-
-  localStorage.setItem("ultimaSeccion", sectionId); // ✅ Guardar la última sección
   initDashboard();
 }
 
@@ -62,7 +60,20 @@ async function initDashboard() {
     contenedor.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6";
 
     // Tarjeta Balance
-    contenedor.appendChild(createCard("Balance", `$${(data.total_ventas * 1000 - 200).toFixed(2)}`, "text-green-600"));
+    // Balance real usando ingresos y pagos
+    const balance = data.total_ingresos - data.total_pagos;
+
+    const divBalance = document.createElement("div");
+    divBalance.className = "bg-white shadow rounded p-4";
+    divBalance.id = "balanceCaja"; // <- necesario para aplicar color dinámico
+    divBalance.innerHTML = `
+  <h3 class="text-gray-600 text-sm">Balance</h3>
+  <p id="balanceValor" class="text-xl font-bold">$${balance.toFixed(2)}</p>
+`;
+
+    contenedor.appendChild(divBalance);
+    updateBalanceDisplay(balance); // <-  color rojo o verde dependiendo del balance
+
 
     // Tarjeta Ventas / Pagos
     const ventasPagos = document.createElement("div");
@@ -147,7 +158,6 @@ function createCard(titulo, contenido, extraClass = "") {
 
 // Inicializar cuando cargue el documento
 window.addEventListener("DOMContentLoaded", () => {
-  const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
-  showSection(ultima);
-  initDashboard(); // Cargar métricas simuladas
+  showSection("inicio"); // Mostrar panel de control al iniciar
+  // initDashboard(); // Cargar métricas simuladas
 });
