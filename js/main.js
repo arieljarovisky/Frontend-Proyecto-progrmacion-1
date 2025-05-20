@@ -1,6 +1,5 @@
 // Función para mostrar la sección seleccionada y ocultar las demás
 function showSection(sectionId) {
-  console.log("Sección activa:", sectionId); // 🔍
   const sections = document.querySelectorAll("main > section");
   const buttons = document.querySelectorAll("aside button");
 
@@ -21,9 +20,10 @@ function showSection(sectionId) {
       button.classList.add("text-gray-700", "hover:bg-blue-100");
     }
   });
+
+  localStorage.setItem("ultimaSeccion", sectionId); // ✅ Guardar la última sección
   initDashboard();
 }
-
 // Función para actualizar el color del balance
 function updateBalanceDisplay(balance) {
   const balanceCaja = document.getElementById("balanceCaja");
@@ -156,23 +156,9 @@ function createCard(titulo, contenido, extraClass = "") {
   return div;
 }
 
-// Inicializar cuando cargue el documento
 window.addEventListener("DOMContentLoaded", () => {
-  showSection("inicio"); // Mostrar panel de control al iniciar
-  // initDashboard(); // Cargar métricas simuladas
+  const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
+  showSection(ultima);
+  initDashboard();
 });
-document.getElementById('calculadoraForm').addEventListener('submit', function (e) {
-  e.preventDefault();
 
-  const costo = parseFloat(document.getElementById('costoProducto').value) || 0;
-  const envio = parseFloat(document.getElementById('costoEnvio').value) || 0;
-  const iva = parseFloat(document.getElementById('iva').value) || 0;
-  const ganancia = parseFloat(document.getElementById('ganancia').value) || 0;
-
-  const costoTotal = costo + envio;
-  const ivaCalculado = costoTotal * (iva / 100);
-  const gananciaCalculada = (costoTotal + ivaCalculado) * (ganancia / 100);
-  const precioFinal = costoTotal + ivaCalculado + gananciaCalculada;
-
-  document.getElementById('resultado').textContent = `Precio de venta sugerido: $${precioFinal.toFixed(2)}`;
-});
