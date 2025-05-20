@@ -85,6 +85,19 @@ async function initDashboard() {
       <p class="text-xl font-semibold">${data.total_pagos}</p>
     `;
     contenedor.appendChild(ventasPagos);
+    
+        // Tarjeta Ventas / Pagos
+    const productos_vencidos = document.createElement("div");
+    productos_vencidos.className = "bg-white shadow rounded p-4";
+    productos_vencidos.innerHTML = `
+          <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
+          <ul class="list-disc list-inside text-sm text-gray-700">
+            <li>Alcohol en gel - Cant: 4</li>
+            <li>Guantes - Cant: 3</li>
+            <li>Mascarillas - Cant: 6</li>
+          </ul>
+    `;
+    contenedor.appendChild(productos_vencidos);
 
     // Producto más vendido
     contenedor.appendChild(createCard(
@@ -107,28 +120,9 @@ async function initDashboard() {
           <h4 class="text-lg font-semibold mb-2">Ventas Semanales</h4>
           <canvas id="ventasChart" height="180"></canvas>
         </div>
-        <div class="bg-white shadow rounded p-4">
+        <div class="bg-white shadow rounded p-4 w-[50%]">
           <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos ($)</h4>
           <canvas id="ingresosEgresosChart" height="180"></canvas>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700">
-            <li>Alcohol en gel - Cant: 4</li>
-            <li>Guantes - Cant: 3</li>
-            <li>Mascarillas - Cant: 6</li>
-          </ul>
-        </div>
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Productos con vencimiento próximo</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700">
-            <li>Vacuna Rabia - 2025-06-10</li>
-            <li>Desinfectante - 2025-06-15</li>
-            <li>Suero Oral - 2025-06-22</li>
-          </ul>
         </div>
       </div>
     `;
