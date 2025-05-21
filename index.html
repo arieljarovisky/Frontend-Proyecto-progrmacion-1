@@ -6,32 +6,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Caja Plus - Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 </head>
 
-<body class="flex h-screen bg-gray-100">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg p-4 flex flex-col justify-between">
-    <div>
-      <h1 class="text-2xl font-bold mb-6 text-blue-600">Caja Plus</h1>
-      <nav class="space-y-2">
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
-          onclick="showSection('inicio')">Inicio</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
-          onclick="showSection('nuevaVenta')">Nueva Venta</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
-          onclick="showSection('caja')">Caja</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
-          onclick="showSection('productos')">productos</button>
+</head>
 
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
-          onclick="showSection('historial')">Historial</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded">Modo Claro/Oscuro</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
-          onclick="showSection('nuevaCompra')">Nueva Compra</button>
-      </nav>
-    </div>
-    <footer class="text-sm text-gray-400">&copy; 2025 Caja Plus</footer>
-  </aside>
+<body class="flex h-screen bg-gray-100 text-black dark:bg-gray-900 dark:text-white">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg p-4 flex flex-col justify-between">
+  <div>
+    <h1 class="text-2xl font-bold mb-6 text-blue-600 dark:text-blue-300">Caja Plus</h1>
+    <nav class="space-y-2">
+      <button class="w-full text-left text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 px-4 py-2 rounded"
+        onclick="showSection('inicio')">Inicio</button>
+      <button class="w-full text-left text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 px-4 py-2 rounded"
+        onclick="showSection('nuevaVenta')">Nueva Venta</button>
+      <button class="w-full text-left text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 px-4 py-2 rounded"
+        onclick="showSection('caja')">Caja</button>
+      <button class="w-full text-left text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 px-4 py-2 rounded"
+        onclick="showSection('productos')">Productos</button>
+      <button class="w-full text-left text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 px-4 py-2 rounded"
+        onclick="showSection('historial')">Historial</button>
+
+      <!-- Botón modo oscuro -->
+      <button onclick="ModoOscuro()" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded">
+        Cambiar modo
+      </button>
+
+      <button class="w-full text-left text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 px-4 py-2 rounded"
+        onclick="showSection('nuevaCompra')">Nueva Compra</button>
+    </nav>
+  </div>
+  <footer class="text-sm text-gray-400 dark:text-gray-500">&copy; 2025 Caja Plus</footer>
+</aside>
+
 
   <!-- Main content -->
   <main class="flex-1 p-6 overflow-auto">
@@ -44,99 +57,99 @@
 
     <!-- NUEVA VENTA -->
     <section id="nuevaVenta" class="hidden">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Venta</h2>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Seleccioná los productos</h2>
+  <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Registrar Nueva Venta</h2>
+  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Seleccioná los productos</h2>
 
-      <input id="filtroProductos" type="text" placeholder="Buscar productos..."
-        class="mb-4 p-2 border rounded w-full" />
-      <form id="ventaForm" class="flex gap-6 flex-col lg:flex-row">
-        <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
+  <input id="filtroProductos" type="text" placeholder="Buscar productos..."
+    class="mb-4 p-2 border rounded w-full" />
 
-        <!-- Derecha: Productos seleccionados -->
-        <div class="w-full lg:w-1/3">
+  <form id="ventaForm" class="flex gap-6 flex-col lg:flex-row">
+    <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
 
-          <h3 class="text-lg font-semibold mb-2">Productos seleccionados</h3>
-          <div id="productosSeleccionados" class="flex flex-col  max-h-[400px]  border rounded p-2">
-          </div>
-          <p class="mt-4 text-lg font-bold">Total: $<span id="totalCompra">0</span></p>
+    <div class="w-full lg:w-1/3">
+      <h3 class="text-lg font-semibold dark:text-white mb-2">Productos seleccionados</h3>
+      <div id="productosSeleccionados" class="flex flex-col max-h-[400px] border rounded p-2"></div>
+      <p class="mt-4 text-lg font-bold dark:text-white">Total: $<span id="totalCompra">0</span></p>
 
-          <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">
-            Confirmar Venta
-          </button>
-        </div>
-      </form>
-      <!-- Mensaje de éxito o error -->
-      <div id="mensaje" class="mt-6 text-center font-medium"></div>
-    </section>
+      <button type="submit" class="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+        Confirmar Venta
+      </button>
+    </div>
+  </form>
+  <div id="mensaje" class="mt-6 text-center font-medium dark:text-white"></div>
+</section>
+
 
 
     <!-- CAJA -->
     <section id="caja" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Caja (Movimientos del Día)</h2>
-      <div class="flex justify-between items-center mb-4">
-        <div id="balanceDia" class="text-lg font-bold">Balance: $0</div>
-        <div>
-          <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded mr-2"
-            onclick="showSection('nuevaVenta')">Nueva Venta</button>
-          <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
-            onclick="alert('Registrar nuevo pago')">Nuevo Pago</button>
-        </div>
-      </div>
-      <div class="mb-4">
-        <label class="mr-2 font-semibold">Filtrar por:</label>
-        <select id="filtroCaja" class="border border-gray-300 rounded p-1">
-          <option value="todos">Todos</option>
-          <option value="ventas">Ventas</option>
-          <option value="pagos">Pagos</option>
-        </select>
-      </div>
-      <p>Listado de movimientos del día (en construcción)</p>
-    </section>
+  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Caja (Movimientos del Día)</h2>
+  <div class="flex justify-between items-center mb-4">
+    <div id="balanceDia" class="text-lg font-bold dark:text-white">Balance: $0</div>
+    <div>
+      <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded mr-2"
+        onclick="showSection('nuevaVenta')">Nueva Venta</button>
+      <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
+        onclick="alert('Registrar nuevo pago')">Nuevo Pago</button>
+    </div>
+  </div>
+  <div class="mb-4">
+    <label class="mr-2 font-semibold dark:text-white">Filtrar por:</label>
+    <select id="filtroCaja" class="border border-gray-300 rounded p-1">
+      <option value="todos">Todos</option>
+      <option value="ventas">Ventas</option>
+      <option value="pagos">Pagos</option>
+    </select>
+  </div>
+  <p class="dark:text-white">Listado de movimientos del día (en construcción)</p>
+</section>
+
 
     <!-- NUEVA COMPRA -->
     <section id="nuevaCompra" class="hidden">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Compra</h2>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Seleccioná los productos a comprar</h2>
+  <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Registrar Nueva Compra</h2>
+  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Seleccioná los productos a comprar</h2>
 
-      <input id="filtroCompraProductos" type="text" placeholder="Buscar productos..."
-        class="mb-4 p-2 border rounded w-full" />
-      <form id="compraForm" class="flex gap-6 flex-col lg:flex-row">
-        <div id="compraProductosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
+  <input id="filtroCompraProductos" type="text" placeholder="Buscar productos..."
+    class="mb-4 p-2 border rounded w-full" />
 
-        <!-- Derecha: Productos seleccionados -->
-        <div class="w-full lg:w-1/3">
-          <h3 class="text-lg font-semibold mb-2">Productos seleccionados</h3>
-          <div id="compraSeleccionados" class="flex flex-col max-h-[400px] border rounded p-2"></div>
-          <p class="mt-4 text-lg font-bold">Total Compra: $<span id="totalCompraCompra">0</span></p>
+  <form id="compraForm" class="flex gap-6 flex-col lg:flex-row">
+    <div id="compraProductosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
 
-          <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-            Confirmar Compra
-          </button>
-        </div>
-      </form>
+    <!-- Derecha: Productos seleccionados -->
+    <div class="w-full lg:w-1/3">
+      <h3 class="text-lg font-semibold mb-2 dark:text-white">Productos seleccionados</h3>
+      <div id="compraSeleccionados" class="flex flex-col max-h-[400px] border rounded p-2"></div>
+      <p class="mt-4 text-lg font-bold dark:text-white">Total Compra: $<span id="totalCompraCompra">0</span></p>
 
-      <div id="mensajeCompra" class="mt-6 text-center font-medium"></div>
-    </section>
+      <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+        Confirmar Compra
+      </button>
+    </div>
+  </form>
+
+  <div id="mensajeCompra" class="mt-6 text-center font-medium dark:text-white"></div>
+</section>
+
 
     <!-- PRODUCTOS -->
     <section id="productos" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Productos</h2>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Listado de Productos</h2>
-      <div class="mb-4">
-        <input type="text" id="filtroProductos" placeholder="Buscar productos..."
-          class="w-full p-2 border border-gray-300 rounded">
-      </div>
-      <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Productos</h2>
+  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Listado de Productos</h2>
+  <div class="mb-4">
+    <input type="text" id="filtroProductos" placeholder="Buscar productos..."
+      class="w-full p-2 border border-gray-300 rounded">
+  </div>
+  <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</section>
 
-
-      </div>
-    </section>
 
     <!-- HISTORIAL -->
     <section id="historial" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Historial Completo</h2>
-      <p>Sección para ver todos los movimientos históricos (en construcción)</p>
-    </section>
+  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Historial Completo</h2>
+  <p class="dark:text-white">Sección para ver todos los movimientos históricos (en construcción)</p>
+</section>
+
   </main>
   <!-- Cargar scripts externos -->
 
@@ -150,6 +163,9 @@
   <script src="js/productos.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/modooscuro.js"></script>
+
+  
 </body>
 
 
