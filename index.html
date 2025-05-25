@@ -36,9 +36,40 @@
   <!-- Main content -->
   <main class="flex-1 p-6 overflow-auto">
     <!-- INICIO -->
-    <section id="inicio">
+    <!-- <section id="inicio">
       <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
+      </div>
+    </section> -->
+
+    <section id="inicio">
+      <div class="mb-4 flex gap-4 items-center">
+        <label for="filtroTiempo" class="font-semibold">Ver por:</label>
+        <select id="filtroTiempo" class="p-2 border rounded">
+          <option value="diario">Diario</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="anual">Anual</option>
+        </select>
+
+        <select id="filtroRango" class="p-2 border rounded">
+          <!-- Se completará dinámicamente -->
+        </select>
+      </div>
+
+      <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Tarjetas de métricas principales -->
+      </div>
+
+      <div id="graficosDashboard" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded p-4">
+          <h4 class="text-lg font-semibold mb-2">Gráfico de Ventas</h4>
+          <canvas id="ventasChart" height="180"></canvas>
+        </div>
+        <div class="bg-white shadow rounded p-4">
+          <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos</h4>
+          <canvas id="ingresosEgresosChart" height="180"></canvas>
+        </div>
       </div>
     </section>
 
