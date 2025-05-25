@@ -28,6 +28,9 @@
         <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded">Modo Claro/Oscuro</button>
         <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
           onclick="showSection('nuevaCompra')">Nueva Compra</button>
+          <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+          onclick="showSection('calculadora')">Calculadora de Precio</button>
+        
       </nav>
     </div>
     <footer class="text-sm text-gray-400">&copy; 2025 Caja Plus</footer>
@@ -162,6 +165,39 @@
 
       </div>
     </section>
+    <!-- CALCULADORA DE PRECIO -->
+<section id="calculadora" class="hidden">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Calculadora de Precio de Venta</h2>
+  <div class="mb-4">
+   
+    </select>
+  </div>
+  
+  <form id="calculadoraForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+    <div>
+      <label class="block font-medium text-gray-700">Costo del Producto ($)</label>
+      <input type="number" id="costoProducto" class="w-full p-2 border rounded" required />
+    </div>
+    <div>
+      <label class="block font-medium text-gray-700">Costo de Envío ($)</label>
+      <input type="number" id="costoEnvio" class="w-full p-2 border rounded" required />
+    </div>
+    <div>
+      <label class="block font-medium text-gray-700">IVA (%)</label>
+      <input type="number" id="iva" class="w-full p-2 border rounded" value="21" required />
+    </div>
+    <div>
+      <label class="block font-medium text-gray-700">Margen de Ganancia (%)</label>
+      <input type="number" id="ganancia" class="w-full p-2 border rounded" required />
+    </div>
+    <div class="md:col-span-2">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2">Calcular Precio</button>
+    </div>
+  </form>
+
+  <div id="resultado" class="mt-6 text-xl font-semibold text-green-600"></div>
+</section>
+
 
     <!-- HISTORIAL -->
     <section id="historial" class="hidden">
@@ -181,6 +217,8 @@
   <script src="js/productos.js"></script>
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/calculadora.js"></script>
+
 </body>
 
 
