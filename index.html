@@ -46,12 +46,38 @@
 </aside>
 
 
+
   <!-- Main content -->
   <main class="flex-1 p-6 overflow-auto">
-    <!-- INICIO -->
-    <section id="inicio">
-      <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
+    <section id="inicio">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
+      <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Tarjetas de métricas principales -->
+      </div>
+
+      <div class="mb-4 flex gap-4 items-center pt-6 ps-2">
+        <label for="filtroTiempo" class="font-semibold">Ver por:</label>
+        <select id="filtroTiempo" class="p-2 border rounded-lg">
+          <option value="diario">Diario</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="anual">Anual</option>
+        </select>
+
+        <select id="filtroRango" class="p-2 border rounded-lg">
+        </select>
+      </div>
+
+      <div id="graficosDashboard" class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white shadow rounded p-4 col-span-2 ">
+          <h4 class="text-lg font-semibold mb-2">Gráfico de Ventas</h4>
+          <canvas id="ventasChart" height="150"></canvas>
+        </div>
+        <div class="bg-white shadow rounded p-4 ">
+          <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos</h4>
+          <canvas id="ingresosEgresosChart" height="200"></canvas>
+        </div>
       </div>
     </section>
 
@@ -80,6 +106,71 @@
 </section>
 
 
+    <!-- PAGOS -->
+    <section id="pagos" class="hidden">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6">Registrar Egreso</h2>
+      <div class="max-w-6xl mx-auto bg-white shadow rounded p-6">
+        <form id="formPago" class="space-y-4">
+          <!-- Destinatario -->
+          <div>
+            <label class="block font-medium text-gray-700">Destinatario</label>
+            <input type="text" id="destinatario" class="w-full p-2 border rounded" />
+          </div>
+
+          <!-- Concepto -->
+          <div>
+            <label class="block font-medium text-gray-700">Concepto</label>
+            <select id="concepto" class="w-full p-2 border rounded">
+              <option value="">Seleccionar</option>
+              <option value="alquiler">Alquiler</option>
+              <option value="sueldos">Sueldos</option>
+              <option value="proveedor">Proveedor</option>
+              <option value="servicios">Servicios</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+
+          <!-- Descripción -->
+          <div>
+            <label class="block font-medium text-gray-700">Descripción</label>
+            <textarea id="descripcion" class="w-full p-2 border rounded"></textarea>
+          </div>
+
+          <!-- Monto -->
+          <div>
+            <label class="block font-medium text-gray-700">Monto ($)</label>
+            <input type="number" id="monto" class="w-full p-2 border rounded" />
+          </div>
+
+          <!-- Fecha -->
+          <div>
+            <label class="block font-medium text-gray-700">Fecha del Pago</label>
+            <input type="date" id="fecha" class="w-full p-2 border rounded" />
+            <p class="text-sm text-gray-500">Si no se selecciona, se usará la fecha actual.</p>
+          </div>
+
+          <!-- Método de Pago -->
+          <div>
+            <label class="block font-medium text-gray-700">Método de Pago</label>
+            <select id="metodo" class="w-full p-2 border rounded">
+              <option value="">Seleccionar</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia</option>
+            </select>
+          </div>
+
+          <!-- Botones -->
+          <div class="flex justify-end gap-4 pt-4 justify-center">
+            <button type="reset"
+              class="bg-red-600 hover:bg-red-700 text-white text-xl px-6 py-2 rounded">Cancelar</button>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xl px-6 py-2 rounded">Registrar
+              Pago</button>
+          </div>
+        </form>
+
+      </div>
+      <div id="mensajePago" class="mt-4 text-lg font-semibold text-center"></div>
+    </section>
 
     <!-- CAJA -->
     <section id="caja" class="hidden">
@@ -103,7 +194,6 @@
   </div>
   <p class="dark:text-white">Listado de movimientos del día (en construcción)</p>
 </section>
-
 
     <!-- NUEVA COMPRA -->
     <section id="nuevaCompra" class="hidden">
@@ -130,8 +220,6 @@
 
   <div id="mensajeCompra" class="mt-6 text-center font-medium dark:text-white"></div>
 </section>
-
-
     <!-- PRODUCTOS -->
     <section id="productos" class="hidden">
   <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Productos</h2>
@@ -143,6 +231,42 @@
   <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 </section>
 
+      </div>
+    </section>
+
+    <!-- CALCULADORA DE PRECIO -->
+    <section id="calculadora" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Calculadora de Precio de Venta</h2>
+      <div class="mb-4">
+
+        </select>
+      </div>
+
+      <form id="calculadoraForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+        <div>
+          <label class="block font-medium text-gray-700">Costo del Producto ($)</label>
+          <input type="number" id="costoProducto" class="w-full p-2 border rounded" required />
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">Costo de Envío ($)</label>
+          <input type="number" id="costoEnvio" class="w-full p-2 border rounded" required />
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">IVA (%)</label>
+          <input type="number" id="iva" class="w-full p-2 border rounded" value="21" required />
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700">Margen de Ganancia (%)</label>
+          <input type="number" id="ganancia" class="w-full p-2 border rounded" required />
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2">Calcular Precio</button>
+        </div>
+      </form>
+
+      <div id="resultado" class="mt-6 text-xl font-semibold text-green-600"></div>
+    </section>
+
 
     <!-- HISTORIAL -->
     <section id="historial" class="hidden">
@@ -152,10 +276,8 @@
 
   </main>
   <!-- Cargar scripts externos -->
-
-  <script src="js/compras.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 📊 Chart.js para los gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/charts.js"></script>
   <script src="js/config.js"></script>
   <script src="js/caja.js"></script>
@@ -164,8 +286,9 @@
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/modooscuro.js"></script>
+  <script src="js/calculadora.js"></script>
+  <script src="js/pagos.js"></script>
 
-  
 </body>
 
 
