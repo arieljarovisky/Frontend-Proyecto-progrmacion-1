@@ -66,7 +66,7 @@ async function initDashboard() {
     const balance = data.total_ingresos - data.total_egresos;
 
     const divBalance = document.createElement("div");
-    divBalance.className = "bg-white shadow rounded p-4";
+    divBalance.className = "bg-white shadow rounded-xl p-4";
     divBalance.id = "balanceCaja"; // <- necesario para aplicar color dinámico
     divBalance.innerHTML = `
   <h3 class="text-gray-600 text-sm">Balance</h3>
