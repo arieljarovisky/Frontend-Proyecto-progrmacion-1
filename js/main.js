@@ -59,7 +59,7 @@ async function initDashboard() {
 
     // Limpiar contenedor y reestablecer clase
     contenedor.innerHTML = "";
-    contenedor.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6";
+    contenedor.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
     // Tarjeta Balance
     // Balance real usando ingresos y pagos
@@ -104,17 +104,6 @@ async function initDashboard() {
     extraContent.className = "col-span-full mt-6 space-y-6";
 
     extraContent.innerHTML = `
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Ventas Semanales</h4>
-          <canvas id="ventasChart" height="180"></canvas>
-        </div>
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos ($)</h4>
-          <canvas id="ingresosEgresosChart" height="180"></canvas>
-        </div>
-      </div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white shadow rounded p-4">
           <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>

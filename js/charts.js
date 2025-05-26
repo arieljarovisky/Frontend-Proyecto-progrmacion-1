@@ -9,13 +9,16 @@ function renderVentasChart(ventasData) {
     }
 
     ventasChartInstance = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: Object.keys(ventasData),
             datasets: [{
                 label: 'Ventas',
                 data: Object.values(ventasData),
-                backgroundColor: 'rgba(59, 130, 246, 0.7)'
+                backgroundColor: 'rgb(51, 51, 255)',
+                borderColor: 'rgb(7, 7, 7)',
+                borderWidth: 1,
+                tension: 0.3
             }]
         },
         options: {
@@ -35,7 +38,7 @@ function renderIngresosVsEgresosChart(ingresos, egresos, rango) {
     }
 
     ingresosChartInstance = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: [
                 `Ingresos $${ingresos.toFixed(2)}`,
@@ -44,7 +47,7 @@ function renderIngresosVsEgresosChart(ingresos, egresos, rango) {
             ],
             datasets: [{
                 data: [ingresos, egresos],
-                backgroundColor: ['#10B981', '#EF4444']
+                backgroundColor: ['#10B981', '#EF4444'],
             }]
         },
         options: {
