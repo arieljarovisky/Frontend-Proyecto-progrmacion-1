@@ -103,13 +103,13 @@
           <!-- Destinatario -->
           <div>
             <label class="block font-medium text-gray-700">Destinatario</label>
-            <input type="text" id="destinatario" class="w-full p-2 border rounded" required />
+            <input type="text" id="destinatario" class="w-full p-2 border rounded"/>
           </div>
 
           <!-- Concepto -->
           <div>
             <label class="block font-medium text-gray-700">Concepto</label>
-            <select id="concepto" class="w-full p-2 border rounded" required>
+            <select id="concepto" class="w-full p-2 border rounded">
               <option value="">Seleccionar</option>
               <option value="alquiler">Alquiler</option>
               <option value="sueldos">Sueldos</option>
@@ -119,10 +119,16 @@
             </select>
           </div>
 
+          <!-- Descripción -->
+          <div>
+            <label class="block font-medium text-gray-700">Descripción</label>
+            <textarea id="descripcion" class="w-full p-2 border rounded"></textarea>
+          </div>
+
           <!-- Monto -->
           <div>
             <label class="block font-medium text-gray-700">Monto ($)</label>
-            <input type="number" id="monto" class="w-full p-2 border rounded" required />
+            <input type="number" id="monto" class="w-full p-2 border rounded"/>
           </div>
 
           <!-- Fecha -->
@@ -135,7 +141,7 @@
           <!-- Método de Pago -->
           <div>
             <label class="block font-medium text-gray-700">Método de Pago</label>
-            <select id="metodo" class="w-full p-2 border rounded" required>
+            <select id="metodo" class="w-full p-2 border rounded">
               <option value="">Seleccionar</option>
               <option value="efectivo">Efectivo</option>
               <option value="transferencia">Transferencia</option>
@@ -143,10 +149,9 @@
           </div>
 
           <!-- Botones -->
-          <div class="flex justify-end gap-4 pt-4">
-            <button type="button" id="cancelarPago"
-              class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</button>
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Registrar
+          <div class="flex justify-end gap-4 pt-4 justify-center">
+            <button type="reset" class="bg-red-600 hover:bg-red-700 text-white text-xl px-6 py-2 rounded">Cancelar</button>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xl px-6 py-2 rounded">Registrar
               Pago</button>
           </div>
         </form>
@@ -233,10 +238,8 @@
     </section>
   </main>
   <!-- Cargar scripts externos -->
-
-  <script src="js/compras.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 📊 Chart.js para los gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/charts.js"></script>
   <script src="js/config.js"></script>
   <script src="js/caja.js"></script>
@@ -245,7 +248,7 @@
   <script src="js/main.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/calculadora.js"></script>
-
+  <script src="js/pagos.js"></script>
 </body>
 
 
