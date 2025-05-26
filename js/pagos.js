@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const pagoForm = document.getElementById("formPago");
 
-  pagoForm.addEventListener("submit", (e) => {
+  pagoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const destinatario = document.getElementById("destinatario").value.trim();
@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const monto = parseFloat(document.getElementById("monto").value);
     const descripcion = document.getElementById("descripcion").value.trim();
     const metodo = document.getElementById("metodo").value;
+    const fechaInput = document.getElementById("fecha").value;
+    // Usar la fecha seleccionada o la actual si está vacío
+    const fecha = fechaInput ? new Date(fechaInput).toISOString() : new Date().toISOString();
 
     // Validaciones básicas
     if (!destinatario || !concepto || !monto || isNaN(monto) || monto <= 0 || !metodo) {
@@ -30,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p><strong>Concepto:</strong> ${concepto}</p>
         <p><strong>Monto:</strong> $${monto.toFixed(2)}</p>
         <p><strong>Método de pago:</strong> ${metodo}</p>
+        <p><strong>Descripción:</strong> ${descripcion || "-"}</p>
       `,
       icon: "warning",
       showCancelButton: true,
@@ -37,27 +41,49 @@ document.addEventListener("DOMContentLoaded", () => {
       cancelButtonText: "Cancelar",
       confirmButtonColor: "#10b981",   
       cancelButtonColor: "#E52020"  
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        const nuevoPago = {
-          destinatario,
-          concepto,
-          monto,
-          descripcion,
-          metodo,
-          fecha: new Date().toISOString()
-        };
+        try {
+          const response = await fetch("http://localhost:5000/api/pagos", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              destinatario,
+              concepto,
+              monto,
+              descripcion,
+              metodo,
+              fecha
+            })
+          });
 
-        const pagos = JSON.parse(localStorage.getItem("pagos")) || [];
-        pagos.push(nuevoPago);
-        localStorage.setItem("pagos", JSON.stringify(pagos));
+          const data = await response.json();
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Pago registrado correctamente',
-          confirmButtonColor: '#10b981'
-        });
-        pagoForm.reset();
+          if (response.ok) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Pago registrado correctamente',
+              confirmButtonColor: '#10b981'
+            });
+            pagoForm.reset();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al registrar pago',
+              text: data.error || "Ocurrió un error inesperado.",
+              confirmButtonColor: '#E52020'
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: "No se pudo conectar con el servidor.",
+            confirmButtonColor: '#E52020'
+          });
+        }
       }
     });
   });
