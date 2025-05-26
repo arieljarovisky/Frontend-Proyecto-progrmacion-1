@@ -136,41 +136,6 @@ async function initDashboard() {
     `;
     contenedor.parentElement.appendChild(extraContent);
 
-    //     filtroTiempo.addEventListener("change", () => {
-    //       const rango = filtroTiempo.value;
-    //       filtroRango.innerHTML = "";
-
-    //       let opciones = [];
-    //       if (rango === "diario") opciones = Object.keys(data.ventas_por_dia);
-    //       else if (rango === "semanal") opciones = Object.keys(data.ventas_por_semana);
-    //       else if (rango === "mensual") opciones = Object.keys(data.ventas_por_mes);
-    //       else if (rango === "anual") opciones = Object.keys(data.ventas_anuales);
-
-    //       opciones.forEach(o => {
-    //         const option = document.createElement("option");
-    //         option.value = o;
-    //         option.textContent = o;
-    //         filtroRango.appendChild(option);
-    //       });
-
-    //       if (rango === "diario") renderVentasChart(data.ventas_por_dia);
-    //       else if (rango === "semanal") renderVentasChart(data.ventas_por_semana);
-    //       else if (rango === "mensual") renderVentasChart(data.ventas_por_mes);
-    //       else if (rango === "anual") renderVentasChart(data.ventas_anuales);
-
-    //       renderIngresosVsEgresosChart(data.total_ingresos, data.total_egresos);
-    //     });
-
-    //     filtroTiempo.dispatchEvent(new Event("change"));
-
-    //   } catch (error) {
-    //     contenedor.innerHTML = `
-    //       <div class="text-red-600 font-semibold text-center col-span-4">
-    //         ⚠️ Error de conexión: ${error.message}
-    //       </div>`;
-    //   }
-    // }
-
     filtroTiempo.addEventListener("change", () => {
       const tipo = filtroTiempo.value;
       filtroRango.innerHTML = "";
@@ -181,10 +146,39 @@ async function initDashboard() {
       else if (tipo === "mensual") opciones = Object.keys(data.ventas_por_mes);
       else if (tipo === "anual") opciones = Object.keys(data.ventas_anuales);
 
+      let defaultValue = opciones[0]; // fallback
+      if (tipo === "diario") {
+        const hoy = new Date();
+        // Formato YYYY-MM-DD
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        const hoyStr = `${yyyy}-${mm}-${dd}`;
+        if (opciones.includes(hoyStr)) defaultValue = hoyStr;
+      } else if (tipo === "semanal") {
+        const hoy = new Date();
+        // Conseguir número de semana ISO y año
+        const semana = getWeekNumber(hoy);
+        const anio = hoy.getFullYear();
+        const semanaLabel = `Semana ${semana} - ${anio}`;
+        if (opciones.includes(semanaLabel)) defaultValue = semanaLabel;
+      } else if (tipo === "mensual") {
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const mesStr = `${yyyy}-${mm}`;
+        if (opciones.includes(mesStr)) defaultValue = mesStr;
+      } else if (tipo === "anual") {
+        const yyyy = new Date().getFullYear().toString();
+        if (opciones.includes(yyyy)) defaultValue = yyyy;
+      }
+
+
       opciones.forEach(o => {
         const option = document.createElement("option");
         option.value = o;
         option.textContent = o;
+        if (o === defaultValue) option.selected = true;
         filtroRango.appendChild(option);
       });
 
@@ -196,6 +190,17 @@ async function initDashboard() {
 
       filtroRango.dispatchEvent(new Event("change"));
     });
+
+    // Función para obtener número de semana ISO
+    function getWeekNumber(date) {
+      const temp = new Date(date.getTime());
+      temp.setHours(0, 0, 0, 0);
+      // Jueves en la semana actual decide el año
+      temp.setDate(temp.getDate() + 3 - ((temp.getDay() + 6) % 7));
+      const week1 = new Date(temp.getFullYear(), 0, 4);
+      return 1 + Math.round(((temp.getTime() - week1.getTime()) / 86400000
+        - 3 + ((week1.getDay() + 6) % 7)) / 7);
+    }
 
     filtroRango.addEventListener("change", () => {
       const tipo = filtroTiempo.value;
