@@ -59,14 +59,15 @@ async function initDashboard() {
 
     // Limpiar contenedor y reestablecer clase
     contenedor.innerHTML = "";
-    contenedor.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+    contenedor.className =
+      "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
     // Tarjeta Balance
     // Balance real usando ingresos y pagos
     const balance = data.total_ingresos - data.total_egresos;
 
     const divBalance = document.createElement("div");
-    divBalance.className = "bg-white shadow rounded p-4";
+    divBalance.className = "bg-white shadow rounded-2xl p-4";
     divBalance.id = "balanceCaja"; // <- necesario para aplicar color dinámico
     divBalance.innerHTML = `
   <h3 class="text-gray-600 text-sm">Balance</h3>
@@ -76,23 +77,24 @@ async function initDashboard() {
     contenedor.appendChild(divBalance);
     updateBalanceDisplay(balance); // <-  color rojo o verde dependiendo del balance
 
-
     // Tarjeta Ventas / Pagos
     const ventasPagos = document.createElement("div");
-    ventasPagos.className = "bg-white shadow rounded p-4";
+    ventasPagos.className = "bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200";
     ventasPagos.innerHTML = `
-      <h3 class="text-gray-600 text-sm">Total Ventas</h3>
+      <h3 class="text-gray-600 text-sm dark:text-gray-400">Total Ventas</h3>
       <p class="text-xl font-semibold">${data.total_ventas}</p>
-      <h3 class="text-gray-600 text-sm mt-2">Total Pagos</h3>
+      <h3 class="text-gray-600 text-sm mt-2 dark:text-gray-400">Total Pagos</h3>
       <p class="text-xl font-semibold">${data.total_pagos}</p>
     `;
     contenedor.appendChild(ventasPagos);
 
     // Producto más vendido
-    contenedor.appendChild(createCard(
-      "Producto más vendido",
-      `${data.producto_mas_vendido.nombre}<br><span class='text-sm text-gray-500'>Cantidad: ${data.producto_mas_vendido.cantidad}</span>`
-    ));
+    contenedor.appendChild(
+      createCard(
+        "Producto más vendido",
+        `${data.producto_mas_vendido.nombre}<br><span class='text-sm text-gray-500'>Cantidad: ${data.producto_mas_vendido.cantidad}</span>`
+      )
+    );
 
     // Borrar secciones extra anteriores si existen
     const seccionesAnteriores = document.getElementById("extra-dashboard");
@@ -104,18 +106,18 @@ async function initDashboard() {
     extraContent.className = "col-span-full mt-6 space-y-6";
 
     extraContent.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white shadow rounded p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-white">
+        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
           <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700">
+          <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
             <li>Alcohol en gel - Cant: 4</li>
             <li>Guantes - Cant: 3</li>
             <li>Mascarillas - Cant: 6</li>
           </ul>
         </div>
-        <div class="bg-white shadow rounded p-4">
+        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
           <h4 class="text-lg font-semibold mb-2">Productos con vencimiento próximo</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700">
+          <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
             <li>Vacuna Rabia - 2025-06-10</li>
             <li>Desinfectante - 2025-06-15</li>
             <li>Suero Oral - 2025-06-22</li>
@@ -131,7 +133,8 @@ async function initDashboard() {
       let opciones = [];
 
       if (tipo === "diario") opciones = Object.keys(data.ventas_por_dia);
-      else if (tipo === "semanal") opciones = Object.keys(data.ventas_por_semana);
+      else if (tipo === "semanal")
+        opciones = Object.keys(data.ventas_por_semana);
       else if (tipo === "mensual") opciones = Object.keys(data.ventas_por_mes);
       else if (tipo === "anual") opciones = Object.keys(data.ventas_anuales);
 
@@ -140,8 +143,8 @@ async function initDashboard() {
         const hoy = new Date();
         // Formato YYYY-MM-DD
         const yyyy = hoy.getFullYear();
-        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
-        const dd = String(hoy.getDate()).padStart(2, '0');
+        const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+        const dd = String(hoy.getDate()).padStart(2, "0");
         const hoyStr = `${yyyy}-${mm}-${dd}`;
         if (opciones.includes(hoyStr)) defaultValue = hoyStr;
       } else if (tipo === "semanal") {
@@ -154,7 +157,7 @@ async function initDashboard() {
       } else if (tipo === "mensual") {
         const hoy = new Date();
         const yyyy = hoy.getFullYear();
-        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const mm = String(hoy.getMonth() + 1).padStart(2, "0");
         const mesStr = `${yyyy}-${mm}`;
         if (opciones.includes(mesStr)) defaultValue = mesStr;
       } else if (tipo === "anual") {
@@ -162,8 +165,7 @@ async function initDashboard() {
         if (opciones.includes(yyyy)) defaultValue = yyyy;
       }
 
-
-      opciones.forEach(o => {
+      opciones.forEach((o) => {
         const option = document.createElement("option");
         option.value = o;
         option.textContent = o;
@@ -187,8 +189,15 @@ async function initDashboard() {
       // Jueves en la semana actual decide el año
       temp.setDate(temp.getDate() + 3 - ((temp.getDay() + 6) % 7));
       const week1 = new Date(temp.getFullYear(), 0, 4);
-      return 1 + Math.round(((temp.getTime() - week1.getTime()) / 86400000
-        - 3 + ((week1.getDay() + 6) % 7)) / 7);
+      return (
+        1 +
+        Math.round(
+          ((temp.getTime() - week1.getTime()) / 86400000 -
+            3 +
+            ((week1.getDay() + 6) % 7)) /
+            7
+        )
+      );
     }
 
     filtroRango.addEventListener("change", () => {
@@ -227,17 +236,32 @@ async function initDashboard() {
 // Función utilitaria
 function createCard(titulo, contenido, extraClass = "") {
   const div = document.createElement("div");
-  div.className = "bg-white shadow rounded p-4";
+  div.className = "bg-white shadow rounded-2xl p-4 dark:bg-gray-800";
   div.innerHTML = `
-    <h3 class="text-gray-600 text-sm">${titulo}</h3>
-    <p class="text-xl font-bold ${extraClass}">${contenido}</p>
+    <h3 class="text-gray-600 text-sm dark:text-gray-400">${titulo}</h3>
+    <p class="text-xl font-bold dark:text-white ${extraClass}">${contenido}</p>
   `;
   return div;
 }
+function modoOscuro() {
+  const html = document.documentElement; // <html>
+  html.classList.toggle("dark");
+
+  // Guardar la preferencia
+  if (html.classList.contains("dark")) {
+    localStorage.setItem("modo", "oscuro");
+  } else {
+    localStorage.setItem("modo", "claro");
+  }
+}
+
 
 window.addEventListener("DOMContentLoaded", () => {
   const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
   showSection(ultima);
+  const modo = localStorage.getItem("modo");
+  if (modo === "oscuro") {
+    document.documentElement.classList.add("dark");
+  }
   initDashboard();
 });
-

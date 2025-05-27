@@ -6,29 +6,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Caja Plus - Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 </head>
 
-<body class="flex h-screen bg-gray-100">
+<body class="flex h-screen bg-gray-100 dark:bg-gray-900">
   <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg p-4 flex flex-col justify-between">
+  <aside class="w-64 bg-white shadow-lg p-4 flex flex-col justify-between dark:bg-gray-800 ">
     <div>
       <h1 class="text-2xl font-bold mb-6 text-blue-600">Caja Plus</h1>
-      <nav class="space-y-2">
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+      <nav class="space-y-2 dark:text-white">
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('inicio')">Inicio</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('nuevaVenta')">Nueva Venta</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('pagos')">Pagos</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('caja')">Caja</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('productos')">Productos</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('historial')">Historial</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded"
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="showSection('calculadora')">Calculadora de Precios</button>
-        <button class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded">Modo Claro/Oscuro</button>
+        <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
+          onclick="modoOscuro()">Modo Claro/Oscuro</button>
 
       </nav>
     </div>
@@ -39,78 +53,80 @@
   <main class="flex-1 p-6 overflow-auto">
 
     <section id="inicio">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
-      <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 dark:text-white">Dashboard</h2>
+      <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 dark:text-white">
         <!-- Tarjetas de métricas principales -->
       </div>
 
-      <div class="mb-4 flex gap-4 items-center pt-6 ps-2">
-        <label for="filtroTiempo" class="font-semibold">Ver por:</label>
-        <select id="filtroTiempo" class="p-2 border rounded">
+      <div class="mb-4 flex gap-4 items-center pt-6 ps-2 dark:text-white">
+        <label for="filtroTiempo" class="font-semibold dark:text-white">Ver por:</label>
+        <select id="filtroTiempo" class="p-2 border rounded-lg dark:bg-gray-700 dark:text-white">
           <option value="diario">Diario</option>
           <option value="semanal">Semanal</option>
           <option value="mensual">Mensual</option>
           <option value="anual">Anual</option>
         </select>
 
-        <select id="filtroRango" class="p-2 border rounded">
+        <select id="filtroRango" class="p-2 border rounded-lg dark:bg-gray-700 dark:text-white">
         </select>
       </div>
 
-      <div id="graficosDashboard" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Gráfico de Ventas</h4>
-          <canvas id="ventasChart" height="200"></canvas>
-        </div>
-        <div class="bg-white shadow rounded p-4 w-full">
+      <div id="graficosDashboard" class="mt-8 grid grid-cols-3 lg:grid-cols-3 gap-6 dark:text-white">
+        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800">
           <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos</h4>
-          <canvas id="ingresosEgresosChart" height="200"></canvas>
+          <canvas id="ingresosEgresosChart" height="150"></canvas>
+        </div>
+        <div class="bg-white shadow rounded-2xl p-4 w-full col-span-2 dark:bg-gray-800">
+          <h4 class="text-lg font-semibold mb-2 col-span-1 w-full dark:text-white">Gráfico de Ventas</h4>
+
+          <canvas id="ventasChart" height="150"></canvas>
         </div>
       </div>
     </section>
 
     <!-- NUEVA VENTA -->
     <section id="nuevaVenta" class="hidden">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Venta</h2>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Seleccioná los productos</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 dark:text-white">Registrar Nueva Venta</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Seleccioná los productos</h2>
 
       <input id="filtroProductos" type="text" placeholder="Buscar productos..."
-        class="mb-4 p-2 border rounded w-full" />
+        class="mb-4 p-2 border rounded-2xl w-full dark:bg-gray-700" />
       <form id="ventaForm" class="flex gap-6 flex-col lg:flex-row">
         <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
 
         <!-- Derecha: Productos seleccionados -->
         <div class="w-full lg:w-1/3">
 
-          <h3 class="text-lg font-semibold mb-2">Productos seleccionados</h3>
-          <div id="productosSeleccionados" class="flex flex-col  max-h-[400px]  border rounded p-2">
+          <h3 class="text-lg font-semibold mb-2 dark:text-white">Productos seleccionados</h3>
+          <div id="productosSeleccionados" class="flex flex-col  max-h-[400px]  border rounded p-2 dark:bg-gray-800 dark:border-gray-700 overflow-y-auto dark:text-white">
+            <!-- Aquí se mostrarán los productos seleccionados -->
           </div>
-          <p class="mt-4 text-lg font-bold">Total: $<span id="totalCompra">0</span></p>
+          <p class="mt-4 text-lg font-bold dark:text-white">Total: $<span id="totalCompra">0</span></p>
 
-          <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">
+          <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-2xl dark:hover:bg-green-600">
             Confirmar Venta
           </button>
         </div>
       </form>
       <!-- Mensaje de éxito o error -->
-      <div id="mensaje" class="mt-6 text-center font-medium"></div>
+      <div id="mensaje" class="mt-6 text-center font-medium dark:text-white"></div>
     </section>
 
     <!-- PAGOS -->
     <section id="pagos" class="hidden">
-      <h2 class="text-3xl font-bold text-gray-800 mb-6">Registrar Egreso</h2>
-      <div class="max-w-6xl mx-auto bg-white shadow rounded p-6">
-        <form id="formPago" class="space-y-4">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">Registrar Egreso</h2>
+      <div class="max-w-6xl mx-auto rounded-2xl bg-white shadow rounded p-6 dark:bg-gray-800">
+        <form id="formPago" class="space-y-4 dark:text-white">
           <!-- Destinatario -->
           <div>
-            <label class="block font-medium text-gray-700">Destinatario</label>
-            <input type="text" id="destinatario" class="w-full p-2 border rounded" />
+            <label class="block font-medium mb-3 ml-1 text-gray-700 dark:text-white">Destinatario</label>
+            <input type="text" id="destinatario" class="w-full p-2 border rounded-2xl dark:bg-gray-700"  />
           </div>
 
           <!-- Concepto -->
           <div>
-            <label class="block font-medium text-gray-700">Concepto</label>
-            <select id="concepto" class="w-full p-2 border rounded">
+            <label class="block font-medium mb-3 ml-1 text-gray-700 dark:text-white">Concepto</label>
+            <select id="concepto" class="w-full p-2 border rounded-2xl dark:bg-gray-700">
               <option value="">Seleccionar</option>
               <option value="alquiler">Alquiler</option>
               <option value="sueldos">Sueldos</option>
@@ -122,27 +138,27 @@
 
           <!-- Descripción -->
           <div>
-            <label class="block font-medium text-gray-700">Descripción</label>
-            <textarea id="descripcion" class="w-full p-2 border rounded"></textarea>
+            <label class="block font-medium text-gray-700 mb-3 ml-1 dark:text-white">Descripción</label>
+            <textarea id="descripcion" class="w-full p-2 border rounded-2xl dark:bg-gray-700"></textarea>
           </div>
 
           <!-- Monto -->
           <div>
-            <label class="block font-medium text-gray-700">Monto ($)</label>
-            <input type="number" id="monto" class="w-full p-2 border rounded" />
+            <label class="block font-medium text-gray-700 mb-3 ml-1 dark:text-white">Monto ($)</label>
+            <input type="number" id="monto" class="w-full p-2 border rounded-2xl dark:bg-gray-700" />
           </div>
 
           <!-- Fecha -->
           <div>
-            <label class="block font-medium text-gray-700">Fecha del Pago</label>
-            <input type="date" id="fecha" class="w-full p-2 border rounded" />
-            <p class="text-sm text-gray-500">Si no se selecciona, se usará la fecha actual.</p>
+            <label class="block font-medium text-gray-700 mb-3 ml-1 dark:text-white ">Fecha del Pago</label>
+            <input type="date" id="fecha" class="w-full p-2 border rounded-2xl dark:bg-gray-700 "  />
+            <p class="text-sm text-gray-500 dark:text-gray-400">Si no se selecciona, se usará la fecha actual.</p>
           </div>
 
           <!-- Método de Pago -->
           <div>
-            <label class="block font-medium text-gray-700">Método de Pago</label>
-            <select id="metodo" class="w-full p-2 border rounded">
+            <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Método de Pago</label>
+            <select id="metodo" class="w-full p-2 border rounded-2xl dark:bg-gray-700">
               <option value="">Seleccionar</option>
               <option value="efectivo">Efectivo</option>
               <option value="transferencia">Transferencia</option>
@@ -152,8 +168,8 @@
           <!-- Botones -->
           <div class="flex justify-end gap-4 pt-4 justify-center">
             <button type="reset"
-              class="bg-red-600 hover:bg-red-700 text-white text-xl px-6 py-2 rounded">Cancelar</button>
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xl px-6 py-2 rounded">Registrar
+              class="bg-red-600 hover:bg-red-700 text-white text-xl px-6 py-2 rounded-2xl">Cancelar</button>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xl px-6 py-2 rounded-2xl">Registrar
               Pago</button>
           </div>
         </form>
@@ -164,34 +180,33 @@
 
     <!-- CAJA -->
     <section id="caja" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Caja (Movimientos del Día)</h2>
-      <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Caja (Movimientos del Día)</h2>
+      <div class="flex justify-between items-center mb-4  dark:text-white">
         <div id="balanceDia" class="text-lg font-bold">Balance: $0</div>
         <div>
           <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded mr-2"
             onclick="showSection('nuevaVenta')">Nueva Venta</button>
           <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
-            onclick="alert('Registrar nuevo pago')">Nuevo Pago</button>
+            onclick="showSection('pagos')">Nuevo Pago</button>
         </div>
       </div>
       <div class="mb-4">
-        <label class="mr-2 font-semibold">Filtrar por:</label>
-        <select id="filtroCaja" class="border border-gray-300 rounded p-1">
+        <label class="mr-2 font-semibold dark:text-white">Filtrar por:</label>
+        <select id="filtroCaja" class="border border-gray-300 rounded p-1 dark:bg-gray-700 dark:text-white">
           <option value="todos">Todos</option>
           <option value="ventas">Ventas</option>
           <option value="pagos">Pagos</option>
         </select>
       </div>
-      <p>Listado de movimientos del día (en construcción)</p>
     </section>
 
     <!-- PRODUCTOS -->
     <section id="productos" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Productos</h2>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Listado de Productos</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Productos</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Listado de Productos</h2>
       <div class="mb-4">
         <input type="text" id="filtroProductos" placeholder="Buscar productos..."
-          class="w-full p-2 border border-gray-300 rounded">
+          class="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white" />
       </div>
       <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
@@ -201,31 +216,28 @@
 
     <!-- CALCULADORA DE PRECIO -->
     <section id="calculadora" class="hidden">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Calculadora de Precio de Venta</h2>
-      <div class="mb-4">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 dark:text-white">Calculadora de Precio de Venta</h2>
+ 
 
-        </select>
-      </div>
-
-      <form id="calculadoraForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+      <form id="calculadoraForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl dark:text-white">
         <div>
-          <label class="block font-medium text-gray-700">Costo del Producto ($)</label>
-          <input type="number" id="costoProducto" class="w-full p-2 border rounded" required />
+          <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Costo del Producto ($)</label>
+          <input type="number" id="costoProducto" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" required />
         </div>
         <div>
-          <label class="block font-medium text-gray-700">Costo de Envío ($)</label>
-          <input type="number" id="costoEnvio" class="w-full p-2 border rounded" required />
+          <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Costo de Envío ($)</label>
+          <input type="number" id="costoEnvio" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" required />
         </div>
         <div>
-          <label class="block font-medium text-gray-700">IVA (%)</label>
-          <input type="number" id="iva" class="w-full p-2 border rounded" value="21" required />
+          <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">IVA (%)</label>
+          <input type="number" id="iva" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" value="21" required />
         </div>
         <div>
-          <label class="block font-medium text-gray-700">Margen de Ganancia (%)</label>
-          <input type="number" id="ganancia" class="w-full p-2 border rounded" required />
+          <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Margen de Ganancia (%)</label>
+          <input type="number" id="ganancia" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" required />
         </div>
         <div class="md:col-span-2">
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2">Calcular Precio</button>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2 rounded-2xl">Calcular Precio</button>
         </div>
       </form>
 
@@ -235,8 +247,8 @@
 
     <!-- HISTORIAL -->
     <section id="historial" class="hidden">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Historial Completo</h2>
-      <p>Sección para ver todos los movimientos históricos (en construcción)</p>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Historial Completo</h2>
+      <p class="dark:text-white">Sección para ver todos los movimientos históricos (en construcción)</p>
     </section>
   </main>
   <!-- Cargar scripts externos -->
