@@ -48,6 +48,7 @@ function renderIngresosVsEgresosChart(ingresos, egresos, rango) {
             datasets: [{
                 data: [ingresos, egresos],
                 backgroundColor: ['#10B981', '#EF4444'],
+                
             }]
         },
         options: {
@@ -56,7 +57,7 @@ function renderIngresosVsEgresosChart(ingresos, egresos, rango) {
                 legend: {
                     position: 'top', 
                     labels: {
-                        color: '#374151'
+                        color: 'grey'
                     }
                 },
                 tooltip: {

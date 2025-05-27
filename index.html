@@ -51,31 +51,31 @@
   <main class="flex-1 p-6 overflow-auto">
 
     <section id="inicio">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 dark:text-white">Dashboard</h2>
       <div id="metricas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Tarjetas de métricas principales -->
       </div>
 
       <div class="mb-4 flex gap-4 items-center pt-6 ps-2">
-        <label for="filtroTiempo" class="font-semibold">Ver por:</label>
-        <select id="filtroTiempo" class="p-2 border rounded-lg">
+        <label for="filtroTiempo" class="font-semibold dark:text-white">Ver por:</label>
+        <select id="filtroTiempo" class="p-2 border rounded-lg dark:bg-gray-700 dark:text-white">
           <option value="diario">Diario</option>
           <option value="semanal">Semanal</option>
           <option value="mensual">Mensual</option>
           <option value="anual">Anual</option>
         </select>
 
-        <select id="filtroRango" class="p-2 border rounded-lg">
+        <select id="filtroRango" class="p-2 border rounded-lg dark:bg-gray-700 dark:text-white">
         </select>
       </div>
 
-      <div id="graficosDashboard" class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="bg-white shadow rounded p-4 col-span-2 ">
+      <div id="graficosDashboard" class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6 dark:text-white">
+        <div class="bg-white shadow rounded p-4 col-span-2 dark:bg-gray-800">
           <h4 class="text-lg font-semibold mb-2">Gráfico de Ventas</h4>
           <canvas id="ventasChart" height="150"></canvas>
         </div>
-        <div class="bg-white shadow rounded p-4 ">
-          <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos</h4>
+        <div class="bg-white shadow rounded p-4 dark:bg-gray-800">
+          <h4 class="text-lg font-semibold mb-2 dark:text-white">Ingresos vs Egresos</h4>
           <canvas id="ingresosEgresosChart" height="200"></canvas>
         </div>
       </div>
