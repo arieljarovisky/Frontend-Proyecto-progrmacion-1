@@ -59,14 +59,14 @@ async function initDashboard() {
 
     // Limpiar contenedor y reestablecer clase
     contenedor.innerHTML = "";
-    contenedor.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6";
+    contenedor.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
     // Tarjeta Balance
     // Balance real usando ingresos y pagos
     const balance = data.total_ingresos - data.total_egresos;
 
     const divBalance = document.createElement("div");
-    divBalance.className = "bg-white shadow rounded p-4";
+    divBalance.className = "bg-white shadow rounded-xl p-4";
     divBalance.id = "balanceCaja"; // <- necesario para aplicar color dinámico
     divBalance.innerHTML = `
   <h3 class="text-gray-600 text-sm">Balance</h3>
@@ -79,10 +79,10 @@ async function initDashboard() {
 
     // Tarjeta Ventas / Pagos
     const ventasPagos = document.createElement("div");
-    ventasPagos.className = "bg-white shadow rounded p-4";
+    ventasPagos.className = "bg-white shadow rounded p-4 dark:bg-gray-800";
     ventasPagos.innerHTML = `
       <h3 class="text-gray-600 text-sm">Total Ventas</h3>
-      <p class="text-xl font-semibold">${data.total_ventas}</p>
+      <p class="text-xl font-semibold dark:text-white">${data.total_ventas}</p>
       <h3 class="text-gray-600 text-sm mt-2">Total Pagos</h3>
       <p class="text-xl font-semibold">${data.total_pagos}</p>
     `;
@@ -91,7 +91,7 @@ async function initDashboard() {
     // Producto más vendido
     contenedor.appendChild(createCard(
       "Producto más vendido",
-      `${data.producto_mas_vendido.nombre}<br><span class='text-sm text-gray-500'>Cantidad: ${data.producto_mas_vendido.cantidad}</span>`
+      `${data.producto_mas_vendido.nombre}<br><span class='text-sm text-gray-500 dark:text-white'>Cantidad: ${data.producto_mas_vendido.cantidad}</span>`
     ));
 
     // Borrar secciones extra anteriores si existen
@@ -104,29 +104,18 @@ async function initDashboard() {
     extraContent.className = "col-span-full mt-6 space-y-6";
 
     extraContent.innerHTML = `
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Ventas Semanales</h4>
-          <canvas id="ventasChart" height="180"></canvas>
-        </div>
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos ($)</h4>
-          <canvas id="ingresosEgresosChart" height="180"></canvas>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white shadow rounded p-4">
-          <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6  dark:text-white">
+        <div class="bg-white shadow rounded p-4 dark:bg-gray-800">
+          <h4 class="text-lg font-semibold mb-2 dark:text-white">Productos con bajo stock</h4>
+          <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
             <li>Alcohol en gel - Cant: 4</li>
             <li>Guantes - Cant: 3</li>
             <li>Mascarillas - Cant: 6</li>
           </ul>
         </div>
-        <div class="bg-white shadow rounded p-4">
+        <div class="bg-white shadow rounded p-4 dark:bg-gray-800">
           <h4 class="text-lg font-semibold mb-2">Productos con vencimiento próximo</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700">
+          <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
             <li>Vacuna Rabia - 2025-06-10</li>
             <li>Desinfectante - 2025-06-15</li>
             <li>Suero Oral - 2025-06-22</li>
@@ -238,9 +227,9 @@ async function initDashboard() {
 // Función utilitaria
 function createCard(titulo, contenido, extraClass = "") {
   const div = document.createElement("div");
-  div.className = "bg-white shadow rounded p-4";
+  div.className = "bg-white shadow rounded p-4 dark:bg-gray-800 " + extraClass;
   div.innerHTML = `
-    <h3 class="text-gray-600 text-sm">${titulo}</h3>
+    <h3 class="text-gray-600 text-sm dark:text-gray-400">${titulo}</h3>
     <p class="text-xl font-bold ${extraClass}">${contenido}</p>
   `;
   return div;

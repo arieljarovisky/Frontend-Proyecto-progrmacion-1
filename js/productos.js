@@ -5,7 +5,7 @@ function renderizarProductos(productos) {
 
     productos.forEach(producto => {
         const tarjeta = document.createElement('div');
-        tarjeta.className = 'bg-white p-4 rounded shadow-md';
+        tarjeta.className = 'bg-white p-4 rounded shadow-md dark:bg-gray-800 dark:text-white mb-4';
 
         tarjeta.innerHTML = `
             <h3 class="text-lg font-bold mb-2">${producto.nombre}</h3>

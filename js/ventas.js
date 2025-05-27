@@ -45,15 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
       card.className = `
       w-40 h-60 bg-white border border-gray-200 rounded-xl shadow-md p-4 m-2 
       hover:shadow-lg hover:scale-105 transition-transform duration-300
-      flex flex-col justify-between
+      flex flex-col justify-between dark:bg-gray-800 dark:text-white
       `;
 
       card.innerHTML = `
       <div>
-        <h3 class="text-md font-semibold text-gray-800">${producto.nombre}</h3>
-        <p class="text-gray-600 mt-1 mb-2">Talle: <span class="font-medium text-black-600">${producto.talle}</span></p>
-        <p class="text-gray-600 mt-1 mb-2">Precio: <span class="font-medium text-green-600">$${producto.precio}</span></p>
-        <p class="text-gray-600 mt-1 mb-2">Stock: <span class="font-medium text-black-600">${producto.stock}</span></p>
+        <h3 class="text-md font-semibold text-gray-800 dark:text-white">${producto.nombre}</h3>
+        <p class="text-gray-600 mt-1 mb-2">Talle: <span class="font-medium text-black-600 dark:text-white">${producto.talle}</span></p>
+        <p class="text-gray-600 mt-1 mb-2">Precio: <span class="font-medium text-green-600 dark:text-white">$${producto.precio}</span></p>
+        <p class="text-gray-600 mt-1 mb-2">Stock: <span class="font-medium text-black-600 dark:text-white">${producto.stock}</span></p>
       </div>
       <button type="button" class="mt-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
        Agregar
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     input.min = "1";
     input.value = "1";
     input.placeholder = "Cantidad";
-    input.className = "w-24 px-3 py-2 border rounded";
+    input.className = "w-24 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white";
     input.addEventListener("input", actualizarTotal);
     input.name = "cantidad";
 

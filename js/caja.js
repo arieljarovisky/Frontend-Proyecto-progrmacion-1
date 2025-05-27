@@ -5,10 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Crear tabla
     const tabla = document.createElement("table");
-    tabla.className = "min-w-full bg-white border";
+    tabla.className = "min-w-full bg-white border dark:bg-gray-800 dark:text-white";
     const thead = document.createElement("thead");
     thead.innerHTML = `
-      <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+      <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal dark:bg-gray-700 dark:text-white">
         <th class="py-3 px-6 text-left">Fecha</th>
         <th class="py-3 px-6 text-left">Descripción</th>
         <th class="py-3 px-6 text-left">Tipo</th>
@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
   
       filtrados.forEach((mov) => {
         const tr = document.createElement("tr");
-        tr.className = "border-b border-gray-200 hover:bg-gray-100";
+        tr.className = "border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 ";
         tr.innerHTML = `
-          <td class="py-3 px-6 text-left">${mov.fecha}</td>
-          <td class="py-3 px-6 text-left">${mov.descripcion}</td>
-          <td class="py-3 px-6 text-left capitalize">${mov.tipo}</td>
-          <td class="py-3 px-6 text-right">$${mov.monto.toFixed(2)}</td>
+          <td class="py-3 px-6 text-left dark:text-white">${mov.fecha}</td>
+          <td class="py-3 px-6 text-left dark:text-white">${mov.descripcion}</td>
+          <td class="py-3 px-6 text-left capitalize dark:text-white">${mov.tipo}</td>
+          <td class="py-3 px-6 text-right dark:text-white">$${mov.monto.toFixed(2)}</td>
         `;
         tbody.appendChild(tr);
       });
