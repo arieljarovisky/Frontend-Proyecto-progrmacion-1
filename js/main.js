@@ -1,5 +1,38 @@
 // Función para mostrar la sección seleccionada y ocultar las demás
+function filtrarBotonesPorRol() {
+  const rol = localStorage.getItem("rol");
+  const permisosPorRol = {
+    admin: ["inicio", "usuarios", "caja", "inventario", "pagos", "nuevaVenta", "cerrarSesion", "ventas", "productos", "historial", "modoOscuro"],
+    empleado: ["caja", "nuevaVenta", "cerrarSesion"]
+  };
+
+  const botones = document.querySelectorAll("aside button");
+
+  botones.forEach((btn) => {
+    const onclick = btn.getAttribute("onclick") || "";
+    const coincide = permisosPorRol[rol]?.some(seccion => 
+      onclick.includes(seccion)
+    );
+
+    if (!coincide) {
+      btn.classList.add("hidden");
+    }
+  });
+}
+
 function showSection(sectionId) {
+  const rol = localStorage.getItem("rol");
+  const permisosPorRol = {
+       admin: ["inicio", "usuarios", "caja", "inventario", "pagos", "nuevaVenta", "cerrarSesion", "ventas", "productos", "historial"],
+    empleado: [ "caja", "nuevaVenta"]
+  };
+
+  // Verificamos si el rol tiene permiso
+  if (!permisosPorRol[rol]?.includes(sectionId)) {
+    alert("No tenés permiso para acceder a esta sección.");
+    return;
+  }
+
   const sections = document.querySelectorAll("main > section");
   const buttons = document.querySelectorAll("aside button");
 
@@ -21,10 +54,9 @@ function showSection(sectionId) {
     }
   });
 
-  localStorage.setItem("ultimaSeccion", sectionId); // Guardar la última sección
-  initDashboard();
+  localStorage.setItem("ultimaSeccion", sectionId);
+
 }
-// Función para actualizar el color del balance
 function updateBalanceDisplay(balance) {
   const balanceCaja = document.getElementById("balanceCaja");
   const balanceValor = document.getElementById("balanceValor");
@@ -79,7 +111,8 @@ async function initDashboard() {
 
     // Tarjeta Ventas / Pagos
     const ventasPagos = document.createElement("div");
-    ventasPagos.className = "bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200";
+    ventasPagos.className =
+      "bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200";
     ventasPagos.innerHTML = `
       <h3 class="text-gray-600 text-sm dark:text-gray-400">Total Ventas</h3>
       <p class="text-xl font-semibold">${data.total_ventas}</p>
@@ -255,13 +288,20 @@ function modoOscuro() {
   }
 }
 
-
 window.addEventListener("DOMContentLoaded", () => {
   const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
+  filtrarBotonesPorRol();
   showSection(ultima);
+
   const modo = localStorage.getItem("modo");
   if (modo === "oscuro") {
     document.documentElement.classList.add("dark");
   }
-  initDashboard();
+  const rol = localStorage.getItem("rol");
+  if (rol=="empleado") {
+    showSection("caja");
+    return;
+  }else{
+    showSection("inicio");
+  }
 });

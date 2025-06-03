@@ -24,6 +24,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
       // Podés guardar el usuario en localStorage y redirigir:
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
       localStorage.setItem("logged", "true");
+      localStorage.setItem("rol", data.usuario.rol);
       setTimeout(() => {
         window.location.href = "index.html"; // Cambiá a donde querés redirigir
       }, 1000);
@@ -33,4 +34,6 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
       mensaje.classList.add("text-red-500");
     }
   });
+
+  
   
