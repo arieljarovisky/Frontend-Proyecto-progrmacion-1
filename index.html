@@ -43,7 +43,9 @@
         <button
           class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="modoOscuro()">Modo Claro/Oscuro</button>
-
+       <button
+          class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
+          onclick="cerrarSesion()">Cerrar Sesion</button>
       </nav>
     </div>
     <footer class="text-sm text-gray-400">&copy; 2025 Caja Plus</footer>
@@ -209,16 +211,11 @@
           class="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white" />
       </div>
       <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-
       </div>
     </section>
-
     <!-- CALCULADORA DE PRECIO -->
     <section id="calculadora" class="hidden">
       <h2 class="text-2xl font-bold text-gray-800 mb-6 dark:text-white">Calculadora de Precio de Venta</h2>
- 
-
       <form id="calculadoraForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl dark:text-white">
         <div>
           <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Costo del Producto ($)</label>
@@ -252,7 +249,7 @@
     </section>
   </main>
   <!-- Cargar scripts externos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 📊 Chart.js para los gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/charts.js"></script>
   <script src="js/config.js"></script>
