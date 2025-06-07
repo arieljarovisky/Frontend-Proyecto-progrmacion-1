@@ -22,7 +22,7 @@ function renderizarProductos(productos) {
 
 // Función para filtrar productos
 function filtrarProductos(productos) {
-    const input = document.getElementById('filtroProductos');
+    const input = document.getElementById('filtroProductosVista');
     input.addEventListener('input', () => {
         const texto = input.value.toLowerCase();
         const productosFiltrados = productos.filter(producto =>

@@ -55,7 +55,7 @@ function renderVentasChart(ventasData) {
   });
 }
 
-function renderIngresosVsEgresosChart(ingresos, egresos, rango) {
+function renderIngresosVsEgresosChart(ingresos, egresos) {
   const ctx = document.getElementById("ingresosEgresosChart").getContext("2d");
 
   if (ingresosChartInstance) {
@@ -68,12 +68,11 @@ function renderIngresosVsEgresosChart(ingresos, egresos, rango) {
       labels: [
         `Ingresos $${ingresos.toFixed(2)}`,
         `Egresos $${egresos.toFixed(2)}`,
-        `Balance $${(ingresos - egresos).toFixed(2)}`,
       ],
       datasets: [
         {
-          data: [ingresos, egresos, ingresos - egresos],
-          backgroundColor: ["#10B981", "#EF4444", "#3B82F6"], // verde, rojo, azul balance
+          data: [ingresos, egresos],
+          backgroundColor: ["#10B981", "#EF4444",], // verde, rojo, azul balance
         },
       ],
     },

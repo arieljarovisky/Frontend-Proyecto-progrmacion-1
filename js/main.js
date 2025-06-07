@@ -104,7 +104,7 @@ async function initDashboard() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/ventas/metricas`);
     const data = await response.json();
-
+    console.log("Datos de métricas:", data);
     if (!response.ok) {
       contenedor.innerHTML = `
         <div class="text-red-600 font-semibold text-center col-span-4">
@@ -120,7 +120,7 @@ async function initDashboard() {
 
     // Tarjeta Balance
     // Balance real usando ingresos y pagos
-    const balance = data.total_ingresos - data.total_egresos;
+    const balance = data.saldo_actual;
 
     const divBalance = document.createElement("div");
     divBalance.className = "bg-white shadow rounded-2xl p-4";

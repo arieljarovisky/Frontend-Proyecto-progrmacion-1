@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fetch(`${API_BASE_URL}/api/caja`)
         .then((res) => res.json())
         .then((data) => {
+          console.log("Datos de caja:", data);
           movimientos = data.movimientos || [];
           balanceDia.textContent = `Balance: $${data.saldo}`;
           renderizarTabla();
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
   
+
     function renderizarTabla() {
       const filtro = filtroCaja.value;
       tbody.innerHTML = "";
