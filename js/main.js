@@ -315,8 +315,8 @@ function modoOscuro() {
 window.addEventListener("DOMContentLoaded", () => {
   const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
   filtrarBotonesPorRol(permisosPorRol);
+
   showSection(ultima);
-  initDashboard();
   const modo = localStorage.getItem("modo");
   if (modo === "oscuro") {
     document.documentElement.classList.add("dark");
@@ -326,6 +326,6 @@ window.addEventListener("DOMContentLoaded", () => {
     showSection("caja");
     return;
   } else {
-    showSection("inicio");
+    showSection(ultima);
   }
 });
