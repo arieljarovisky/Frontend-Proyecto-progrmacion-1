@@ -43,7 +43,7 @@
         <button
           class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="modoOscuro()">Modo Claro/Oscuro</button>
-       <button
+        <button
           class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
           onclick="cerrarSesion()">Cerrar Sesion</button>
       </nav>
@@ -100,7 +100,8 @@
         <div class="w-full lg:w-1/3">
 
           <h3 class="text-lg font-semibold mb-2 dark:text-white">Productos seleccionados</h3>
-          <div id="productosSeleccionados" class="flex flex-col  max-h-[400px]  border rounded p-2 dark:bg-gray-800 dark:border-gray-700 overflow-y-auto dark:text-white">
+          <div id="productosSeleccionados"
+            class="flex flex-col  max-h-[400px]  border rounded p-2 dark:bg-gray-800 dark:border-gray-700 overflow-y-auto dark:text-white">
             <!-- Aquí se mostrarán los productos seleccionados -->
           </div>
           <p class="mt-4 text-lg font-bold dark:text-white">Total: $<span id="totalCompra">0</span></p>
@@ -122,7 +123,7 @@
           <!-- Destinatario -->
           <div>
             <label class="block font-medium mb-3 ml-1 text-gray-700 dark:text-white">Destinatario</label>
-            <input type="text" id="destinatario" class="w-full p-2 border rounded-2xl dark:bg-gray-700"  />
+            <input type="text" id="destinatario" class="w-full p-2 border rounded-2xl dark:bg-gray-700" />
           </div>
 
           <!-- Concepto -->
@@ -153,7 +154,7 @@
           <!-- Fecha -->
           <div>
             <label class="block font-medium text-gray-700 mb-3 ml-1 dark:text-white ">Fecha del Pago</label>
-            <input type="date" id="fecha" class="w-full p-2 border rounded-2xl dark:bg-gray-700 "  />
+            <input type="date" id="fecha" class="w-full p-2 border rounded-2xl dark:bg-gray-700 " />
             <p class="text-sm text-gray-500 dark:text-gray-400">Si no se selecciona, se usará la fecha actual.</p>
           </div>
 
@@ -171,7 +172,8 @@
           <div class="flex justify-end gap-4 pt-4 justify-center">
             <button type="reset"
               class="bg-red-600 hover:bg-red-700 text-white text-xl px-6 py-2 rounded-2xl">Cancelar</button>
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xl px-6 py-2 rounded-2xl">Registrar
+            <button type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white text-xl px-6 py-2 rounded-2xl">Registrar
               Pago</button>
           </div>
         </form>
@@ -210,6 +212,14 @@
         <input type="text" id="filtroProductosVista" placeholder="Buscar productos..."
           class="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white" />
       </div>
+      
+      <div class="flex justify-end mb-4">
+        <button id="btnAgregarProducto"
+          class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl">
+          + Agregar Producto
+        </button>
+      </div>
+
       <div id="contenedorProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       </div>
     </section>
@@ -219,22 +229,26 @@
       <form id="calculadoraForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl dark:text-white">
         <div>
           <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Costo del Producto ($)</label>
-          <input type="number" id="costoProducto" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" required />
+          <input type="number" id="costoProducto" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl"
+            required />
         </div>
         <div>
           <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Costo de Envío ($)</label>
-          <input type="number" id="costoEnvio" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" required />
+          <input type="number" id="costoEnvio" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl"
+            required />
         </div>
         <div>
           <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">IVA (%)</label>
-          <input type="number" id="iva" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" value="21" required />
+          <input type="number" id="iva" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" value="21"
+            required />
         </div>
         <div>
           <label class="block font-medium text-gray-700 dark:text-white mb-3 ml-1">Margen de Ganancia (%)</label>
           <input type="number" id="ganancia" class="w-full p-2 border rounded dark:bg-gray-700 rounded-2xl" required />
         </div>
         <div class="md:col-span-2">
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2 rounded-2xl">Calcular Precio</button>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2 rounded-2xl">Calcular
+            Precio</button>
         </div>
       </form>
 

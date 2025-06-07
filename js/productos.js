@@ -46,6 +46,44 @@ function renderizarProductos(productos) {
     });
 }
 
+// Función para agregar productos
+function agregarProductoPopup() {
+    Swal.fire({
+        title: 'Agregar Producto',
+        html: `
+            <div style="text-align:left">
+                <label for="swal-nombre">Nombre:</label>
+                <input id="swal-nombre" class="swal2-input" placeholder="Nombre del producto">
+                <label for="swal-descripcion">Descripción:</label>
+                <input id="swal-descripcion" class="swal2-input" placeholder="Descripción del producto">
+                <label for="swal-precio">Precio:</label>
+                <input id="swal-precio" type="number" class="swal2-input" placeholder="Precio ($)">
+                <label for="swal-stock">Stock:</label>
+                <input id="swal-stock" type="number" class="swal2-input" placeholder="Stock (unidades)">
+            </div>
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Agregar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            const nombre = document.getElementById('swal-nombre').value;
+            const descripcion = document.getElementById('swal-descripcion').value;
+            const precio = parseFloat(document.getElementById('swal-precio').value);
+            const stock = parseInt(document.getElementById('swal-stock').value);
+            if (!nombre || isNaN(precio) || isNaN(stock)) {
+                Swal.showValidationMessage('Todos los campos obligatorios deben estar completos.');
+                return false;
+            }
+            return { nombre, descripcion, precio, stock };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            agregarProducto(result.value);
+        }
+    });
+}
+
 // Función para filtrar productos
 function filtrarProductos(productos) {
     const input = document.getElementById('filtroProductosVista');
@@ -58,6 +96,7 @@ function filtrarProductos(productos) {
     });
 }
 
+// Función para eliminar productos
 async function eliminarProducto(id) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/productos/${id}`, {
@@ -73,6 +112,7 @@ async function eliminarProducto(id) {
     }
 }
 
+// popup para editar productos
 function editarProductoPopup(producto) {
     Swal.fire({
         title: 'Editar Producto',
@@ -108,6 +148,8 @@ function editarProductoPopup(producto) {
     });
 }
 
+
+// Función para editar productos
 async function editarProducto(id, datos) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/productos/${id}`, {
@@ -124,6 +166,20 @@ async function editarProducto(id, datos) {
     }
 }
 
+async function agregarProducto(datos) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/productos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+        if (!response.ok) throw new Error('Error al agregar producto');
+        await refrescarProductos();
+        Swal.fire('Agregado', 'El producto fue creado correctamente.', 'success');
+    } catch (error) {
+        Swal.fire('Error', 'No se pudo agregar el producto.', 'error');
+    }
+}
 
 // Función para inicializar todo
 async function initProductos() {
@@ -140,6 +196,7 @@ async function initProductos() {
     }
 }
 
+// Función para refrescar productos
 async function refrescarProductos() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/productos`);
@@ -151,4 +208,11 @@ async function refrescarProductos() {
 }
 
 // Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', initProductos);
+document.addEventListener('DOMContentLoaded', () => {
+    initProductos();
+    const btnAgregar = document.getElementById('btnAgregarProducto');
+    if (btnAgregar) {
+        btnAgregar.addEventListener('click', agregarProductoPopup);
+    }
+});
+
