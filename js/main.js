@@ -1,16 +1,28 @@
 // Función para mostrar la sección seleccionada y ocultar las demás
-function filtrarBotonesPorRol() {
+const permisosPorRol = {
+  admin: [
+    "inicio",
+    "usuarios",
+    "caja",
+    "inventario",
+    "pagos",
+    "nuevaVenta",
+    "cerrarSesion",
+    "ventas",
+    "productos",
+    "historial",
+    "modoOscuro",
+  ],
+  empleado: ["caja", "nuevaVenta", "cerrarSesion","pagos"],
+};
+function filtrarBotonesPorRol(permisosPorRol) {
   const rol = localStorage.getItem("rol");
-  const permisosPorRol = {
-    admin: ["inicio", "usuarios", "caja", "inventario", "pagos", "nuevaVenta", "cerrarSesion", "ventas", "productos", "historial", "modoOscuro"],
-    empleado: ["caja", "nuevaVenta", "cerrarSesion"]
-  };
 
   const botones = document.querySelectorAll("aside button");
 
   botones.forEach((btn) => {
     const onclick = btn.getAttribute("onclick") || "";
-    const coincide = permisosPorRol[rol]?.some(seccion => 
+    const coincide = permisosPorRol[rol]?.some((seccion) =>
       onclick.includes(seccion)
     );
 
@@ -23,14 +35,27 @@ function filtrarBotonesPorRol() {
 function showSection(sectionId) {
   const rol = localStorage.getItem("rol");
   const permisosPorRol = {
-       admin: ["inicio", "usuarios", "caja", "inventario", "pagos", "nuevaVenta", "cerrarSesion", "ventas", "productos", "historial"],
-    empleado: [ "caja", "nuevaVenta"]
+    admin: [
+      "inicio",
+      "usuarios",
+      "caja",
+      "inventario",
+      "pagos",
+      "nuevaVenta",
+      "cerrarSesion",
+      "ventas",
+      "productos",
+      "historial",
+    ],
+    empleado: ["caja", "nuevaVenta","pagos"],
   };
 
   // Verificamos si el rol tiene permiso
   if (!permisosPorRol[rol]?.includes(sectionId)) {
     alert("No tenés permiso para acceder a esta sección.");
     return;
+  }else{
+    initDashboard()
   }
 
   const sections = document.querySelectorAll("main > section");
@@ -55,7 +80,6 @@ function showSection(sectionId) {
   });
 
   localStorage.setItem("ultimaSeccion", sectionId);
-
 }
 function updateBalanceDisplay(balance) {
   const balanceCaja = document.getElementById("balanceCaja");
@@ -290,18 +314,18 @@ function modoOscuro() {
 
 window.addEventListener("DOMContentLoaded", () => {
   const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
-  filtrarBotonesPorRol();
+  filtrarBotonesPorRol(permisosPorRol);
   showSection(ultima);
-
+  initDashboard();
   const modo = localStorage.getItem("modo");
   if (modo === "oscuro") {
     document.documentElement.classList.add("dark");
   }
   const rol = localStorage.getItem("rol");
-  if (rol=="empleado") {
+  if (rol == "empleado") {
     showSection("caja");
     return;
-  }else{
+  } else {
     showSection("inicio");
   }
 });
