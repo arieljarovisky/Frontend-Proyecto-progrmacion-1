@@ -19,6 +19,24 @@ function renderizarProductos(productos) {
             <button class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 eliminar-btn">Eliminar</button>
         `;
 
+        const btnEliminar = tarjeta.querySelector('.eliminar-btn');
+        btnEliminar.addEventListener('click', async () => {
+            // Confirmación con SweetAlert (opcional)
+            const resultado = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡Esta acción eliminará el producto permanentemente!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+            if (resultado.isConfirmed) {
+                await eliminarProducto(producto.id);
+            }
+        });
+
         contenedor.appendChild(tarjeta);
     });
 }
@@ -34,6 +52,22 @@ function filtrarProductos(productos) {
         renderizarProductos(productosFiltrados);
     });
 }
+
+async function eliminarProducto(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/productos/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Error al eliminar producto');
+        // Actualizá la lista de productos
+        productosGlobal = productosGlobal.filter(prod => prod.id !== id);
+        renderizarProductos(productosGlobal);
+        Swal.fire('Eliminado', 'El producto fue eliminado correctamente.', 'success');
+    } catch (error) {
+        Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
+    }
+}
+
 
 // Función para inicializar todo
 async function initProductos() {
