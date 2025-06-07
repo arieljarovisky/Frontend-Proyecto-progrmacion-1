@@ -37,6 +37,11 @@ function renderizarProductos(productos) {
             }
         });
 
+        const btnEditar = tarjeta.querySelector('.editar-btn');
+        btnEditar.addEventListener('click', () => {
+            editarProductoPopup(producto);
+        });
+
         contenedor.appendChild(tarjeta);
     });
 }
@@ -68,6 +73,57 @@ async function eliminarProducto(id) {
     }
 }
 
+function editarProductoPopup(producto) {
+    Swal.fire({
+        title: 'Editar Producto',
+        html: `
+            <div style="text-align:left">
+                <label for="swal-input-nombre">Nombre:</label>
+                <input id="swal-input-nombre" class="swal2-input" value="${producto.nombre}">
+                <label for="swal-input-descripcion">Descripción:</label>
+                <input id="swal-input-descripcion" class="swal2-input" value="${producto.descripcion}">
+                <label for="swal-input-precio">Precio:</label>
+                <input id="swal-input-precio" type="number" class="swal2-input" value="${producto.precio}">
+                <label for="swal-input-stock">Stock:</label>
+                <input id="swal-input-stock" type="number" class="swal2-input" value="${producto.stock}">
+            </div>
+        `,
+
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            return {
+                nombre: document.getElementById('swal-input-nombre').value,
+                descripcion: document.getElementById('swal-input-descripcion').value,
+                precio: parseFloat(document.getElementById('swal-input-precio').value),
+                stock: parseInt(document.getElementById('swal-input-stock').value)
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            editarProducto(producto.id, result.value);
+        }
+    });
+}
+
+async function editarProducto(id, datos) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/productos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+        if (!response.ok) throw new Error('Error al editar producto');
+        // Actualizá productosGlobal y la vista (idealmente, pedí de nuevo la lista al back)
+        await refrescarProductos();
+        Swal.fire('Guardado', 'El producto fue editado correctamente.', 'success');
+    } catch (error) {
+        Swal.fire('Error', 'No se pudo editar el producto.', 'error');
+    }
+}
+
 
 // Función para inicializar todo
 async function initProductos() {
@@ -81,6 +137,16 @@ async function initProductos() {
         filtrarProductos();
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+async function refrescarProductos() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/productos`);
+        productosGlobal = await response.json();
+        renderizarProductos(productosGlobal);
+    } catch (error) {
+        console.error('Error al refrescar productos:', error);
     }
 }
 
