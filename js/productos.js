@@ -1,7 +1,9 @@
+let productosGlobal = [];
+
 // Función para renderizar tarjetas de productos
 function renderizarProductos(productos) {
     const contenedor = document.getElementById('contenedorProductos');
-    contenedor.innerHTML = ''; // Limpiar contenido anterior
+    contenedor.innerHTML = ''; // Limpia contenido anterior
 
     productos.forEach(producto => {
         const tarjeta = document.createElement('div');
@@ -13,7 +15,8 @@ function renderizarProductos(productos) {
             <p class="text-sm mb-1"><strong>Descripción:</strong> ${producto.descripcion || 'Sin descripción'}</p>
             <p class="text-sm mb-1"><strong>Precio:</strong> $${producto.precio}</p>
             <p class="text-sm mb-3"><strong>Stock:</strong> ${producto.stock} unidades</p>
-            <button class="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600">Editar</button>
+            <button class="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 mr-2 editar-btn">Editar</button>
+            <button class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 eliminar-btn">Eliminar</button>
         `;
 
         contenedor.appendChild(tarjeta);
@@ -25,7 +28,7 @@ function filtrarProductos(productos) {
     const input = document.getElementById('filtroProductosVista');
     input.addEventListener('input', () => {
         const texto = input.value.toLowerCase();
-        const productosFiltrados = productos.filter(producto =>
+        const productosFiltrados = productosGlobal.filter(producto =>
             producto.nombre.toLowerCase().includes(texto)
         );
         renderizarProductos(productosFiltrados);
@@ -39,9 +42,9 @@ async function initProductos() {
         if (!response.ok) {
             throw new Error('Error al cargar los productos');
         }
-        const productos = await response.json();
-        renderizarProductos(productos);
-        filtrarProductos(productos);
+        productosGlobal = await response.json();
+        renderizarProductos(productosGlobal);
+        filtrarProductos();
     } catch (error) {
         console.error('Error:', error);
     }
