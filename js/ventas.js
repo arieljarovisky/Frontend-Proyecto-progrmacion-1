@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(ventaData),
       });
-
+      console.log("Enviando datos de venta:", ventaData);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al registrar la venta");
 

@@ -21,11 +21,7 @@ function capitalizar(texto) {
 }
 document.addEventListener("DOMContentLoaded", () => {
   const pagoForm = document.getElementById("formPago");
-
   cargarConceptosPorRol(conceptosPorRol);
-  function capitalizar(texto) {
-    return texto.charAt(0).toUpperCase() + texto.slice(1);
-  }
 
   pagoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
