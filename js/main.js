@@ -230,11 +230,11 @@ async function initDashboard() {
         filtroRango.appendChild(option);
       });
 
-      // Render todos los valores según tipo para el gráfico de barras
-      if (tipo === "diario") renderVentasChart(data.ventas_por_dia);
-      else if (tipo === "semanal") renderVentasChart(data.ventas_por_semana);
-      else if (tipo === "mensual") renderVentasChart(data.ventas_por_mes);
-      else if (tipo === "anual") renderVentasChart(data.ventas_anuales);
+      // Render todos los valores según tipo para el gráfico de lineas
+      if (tipo === "diario") renderVentasChart(data.ingresos_por_dia, data.egresos_por_dia);
+      else if (tipo === "semanal") renderVentasChart(data.ingresos_por_semana, data.egresos_por_semana);
+      else if (tipo === "mensual") renderVentasChart(data.ingresos_por_mes, data.egresos_por_mes);
+      else if (tipo === "anual") renderVentasChart(data.ingresos_anuales, data.egresos_anuales);
 
       filtroRango.dispatchEvent(new Event("change"));
     });
