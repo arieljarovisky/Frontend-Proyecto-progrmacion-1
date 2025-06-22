@@ -32,11 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const descripcion = document.getElementById("descripcion").value.trim();
     const metodo = document.getElementById("metodo").value;
     const fechaInput = document.getElementById("fecha").value;
-    // Usar la fecha seleccionada o la actual si está vacío
-    const fecha = fechaInput
-      ? new Date(fechaInput).toISOString()
-      : new Date().toISOString();
-
+    // Enviamos sólo la fecha (YYYY-MM-DD). Si no se selecciona, el backend usará ahora.
+    const fecha = fechaInput || null;
     // Validaciones básicas
     if (
       !destinatario ||
