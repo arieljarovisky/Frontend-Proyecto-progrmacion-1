@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const productosCardsContainer = document.getElementById("productosContainer"); // donde se mostrarán las cards
-  const seleccionadosContainer = document.getElementById(
-    "productosSeleccionados"
-  ); // contenedor para productos seleccionados
+  const seleccionadosContainer = document.getElementById("productosSeleccionados"); // contenedor para productos seleccionados
   const ventaForm = document.getElementById("ventaForm");
   const mensajeDiv = document.getElementById("mensaje");
   const nuevaVentaSection = document.getElementById("nuevaVenta");
@@ -23,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mensajeDiv.className = "text-red-500";
     }
   }
+
   function filtrarProductos() {
     const input = document.getElementById("filtroProductos");
 
@@ -166,31 +165,57 @@ document.addEventListener("DOMContentLoaded", () => {
       if (producto) total += producto.precio * item.cantidad;
     });
 
-    const ventaData = { items, total };
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/ventas/compras`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(ventaData),
-      });
-      console.log("Enviando datos de venta:", ventaData);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error al registrar la venta");
-
-      mensajeDiv.textContent = `✅ Venta registrada correctamente (ID: ${data.venta_id})`;
-      mensajeDiv.className = "text-green-600";
-      seleccionadosContainer.innerHTML = "";
-      productosSeleccionados = [];
-      actualizarTotal();
-      obtenerProductos();
-    } catch (err) {
-      mensajeDiv.textContent = `❌ ${err.message}`;
+    // Obtener método de pago
+    const metodoPago = document.getElementById("metodoPago").value;
+    if (!metodoPago) {
+      mensajeDiv.textContent = "Seleccioná un método de pago.";
       mensajeDiv.className = "text-red-500";
+      return;
     }
+
+    // Confirmación con SweetAlert2
+    Swal.fire({
+      title: "¿Confirmar venta?",
+      html: `<b>Monto total:</b> $${total.toFixed(2)}<br><b>Método de pago:</b> ${metodoPago}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Recibí el pago",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#10b981",
+      cancelButtonColor: "#E52020",
+      allowOutsideClick: false
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Registro de venta
+        const ventaData = { items, total, metodoPago };
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/ventas/compras`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ventaData),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Error al registrar la venta");
+
+          mensajeDiv.textContent = `✅ Venta registrada correctamente (ID: ${data.venta?.id || "-"})`;
+          mensajeDiv.className = "text-green-600";
+          seleccionadosContainer.innerHTML = "";
+          productosSeleccionados = [];
+          actualizarTotal();
+          obtenerProductos();
+          document.getElementById("metodoPago").value = "";
+        } catch (err) {
+          mensajeDiv.textContent = `❌ ${err.message}`;
+          mensajeDiv.className = "text-red-500";
+        }
+      } else {
+        mensajeDiv.textContent = "Venta no registrada. Debés confirmar el pago para finalizar.";
+        mensajeDiv.className = "text-yellow-500";
+      }
+    });
   });
 
-  obtenerProductos();
+  // Inicialización
   async function initProductos() {
     try {
       await obtenerProductos(); // esto ya llama a renderizarCards()
