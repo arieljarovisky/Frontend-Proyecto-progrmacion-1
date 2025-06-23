@@ -7,13 +7,12 @@ const permisosPorRol = {
     "inventario",
     "pagos",
     "nuevaVenta",
-    "cerrarSesion",
     "ventas",
     "productos",
     "historial",
-    "modoOscuro",
+    "calculadora",
   ],
-  empleado: ["caja", "nuevaVenta", "cerrarSesion","pagos"],
+  empleado: ["caja", "nuevaVenta", "pagos"],
 };
 function filtrarBotonesPorRol(permisosPorRol) {
   const rol = localStorage.getItem("rol");
@@ -42,19 +41,25 @@ function showSection(sectionId) {
       "inventario",
       "pagos",
       "nuevaVenta",
-      "cerrarSesion",
       "ventas",
       "productos",
       "historial",
+      "calculadora",
     ],
-    empleado: ["caja", "nuevaVenta","pagos"],
+    empleado: ["caja", "nuevaVenta", "pagos"],
   };
 
   // Verificamos si el rol tiene permiso
   if (!permisosPorRol[rol]?.includes(sectionId)) {
-    alert("No tenés permiso para acceder a esta sección.");
+
+    Swal.fire({
+      icon: "error",
+      title: "Acceso denegado",
+      text: "No tenés permiso para acceder a esta sección.",
+      confirmButtonColor: "#E52020",
+    });
     return;
-  }else{
+  } else {
     initDashboard()
   }
 
@@ -252,7 +257,7 @@ async function initDashboard() {
           ((temp.getTime() - week1.getTime()) / 86400000 -
             3 +
             ((week1.getDay() + 6) % 7)) /
-            7
+          7
         )
       );
     }
@@ -301,7 +306,7 @@ function createCard(titulo, contenido, extraClass = "") {
   return div;
 }
 function modoOscuro() {
-  const html = document.documentElement; // <html>
+  const html = document.documentElement; 
   html.classList.toggle("dark");
 
   // Guardar la preferencia
@@ -312,15 +317,69 @@ function modoOscuro() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
-  filtrarBotonesPorRol(permisosPorRol);
 
-  showSection(ultima);
+document.addEventListener("DOMContentLoaded", () => {
+  const themeSwitch = document.getElementById("themeSwitch");
+  const html = document.documentElement;
+
+  // Al cargar, setea el estado correcto según preferencia previa
+  const modo = localStorage.getItem("modo");
+  if (modo === "oscuro") {
+    html.classList.add("dark");
+    themeSwitch.checked = true;
+  } else {
+    html.classList.remove("dark");
+    themeSwitch.checked = false;
+  }
+
+  // Escucha el cambio del switch
+  themeSwitch.addEventListener("change", () => {
+    if (themeSwitch.checked) {
+      html.classList.add("dark");
+      localStorage.setItem("modo", "oscuro");
+    } else {
+      html.classList.remove("dark");
+      localStorage.setItem("modo", "claro");
+    }
+  });
+});
+
+
+
+window.addEventListener("DOMContentLoaded", () => {
+  // Mostrar usuario logueado en la topbar
+  const user = JSON.parse(localStorage.getItem("usuario"));
+  const nombre = user?.nombre
+    ? user.nombre.charAt(0).toUpperCase() + user.nombre.slice(1)
+    : "Invitado";
+  const userNameElem = document.getElementById("userName");
+  if (userNameElem) userNameElem.textContent = nombre;
+
+  // Modo oscuro según preferencia previa
   const modo = localStorage.getItem("modo");
   if (modo === "oscuro") {
     document.documentElement.classList.add("dark");
   }
+
+  // Botón de cambiar tema (topbar)
+  const themeBtn = document.getElementById("toggleThemeBtn");
+  if (themeBtn) themeBtn.onclick = modoOscuro;
+
+  // Botón de logout (topbar)
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.onclick = () => {
+      localStorage.removeItem("usuarioLogueado");
+      localStorage.removeItem("rol");
+      window.location.href = "login.html"; // Cambia el nombre si tu login está en otra ruta
+    };
+  }
+
+  // Sidebar: filtrar botones según permisos por rol
+  filtrarBotonesPorRol(permisosPorRol);
+
+  // Mostrar la sección guardada o default
+  const ultima = localStorage.getItem("ultimaSeccion") || "inicio";
   const rol = localStorage.getItem("rol");
   if (rol == "empleado") {
     showSection("caja");
