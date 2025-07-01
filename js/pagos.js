@@ -34,24 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fechaInput = document.getElementById("fecha").value;
     // Enviamos sólo la fecha (YYYY-MM-DD). Si no se selecciona, el backend usará ahora.
     const fecha = fechaInput || null;
-    // Validaciones básicas
-    if (
-      !destinatario ||
-      !concepto ||
-      !monto ||
-      isNaN(monto) ||
-      monto <= 0 ||
-      !metodo
-    ) {
-      Swal.fire({
-        icon: "error",
-        title: "Campos incompletos",
-        text: "Por favor, completá todos los campos correctamente.",
-        confirmButtonColor: "#E52020",
-        confirmButtonText: "Entendido",
-      });
-      return;
-    }
+
 
     // Confirmación con SweetAlert2
     Swal.fire({
