@@ -6,7 +6,7 @@ function renderizarProductos(productos) {
     contenedor.innerHTML = ''; // Limpia contenido anterior
 
     productos.forEach(producto => {
-        const tarjeta = document.createElement('div');
+        const tarjeta = document.createElement('div');  
         tarjeta.className = 'bg-white p-4 rounded-2xl shadow-md dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300';
 
         tarjeta.innerHTML = `
@@ -157,7 +157,13 @@ async function editarProducto(id, datos) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
-        if (!response.ok) throw new Error('Error al editar producto');
+        
+        const data = await response.json();
+
+        if (!response.ok) {
+            Swal.fire('Error', data.error || 'No se pudo editar el producto', 'error');
+            return;
+        }
         // Actualizá productosGlobal y la vista (idealmente, pedí de nuevo la lista al back)
         await refrescarProductos();
         Swal.fire('Guardado', 'El producto fue editado correctamente.', 'success');
@@ -173,7 +179,13 @@ async function agregarProducto(datos) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
-        if (!response.ok) throw new Error('Error al agregar producto');
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            Swal.fire('Error', data.error || 'No se pudo agregar el producto', 'error');
+            return;
+        }
         await refrescarProductos();
         Swal.fire('Agregado', 'El producto fue creado correctamente.', 'success');
     } catch (error) {
