@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const productosCardsContainer = document.getElementById("productosContainer"); // donde se mostrarán las cards
   const seleccionadosContainer = document.getElementById("productosSeleccionados"); // contenedor para productos seleccionados
   const ventaForm = document.getElementById("ventaForm");
-  const mensajeDiv = document.getElementById("mensaje");
   const nuevaVentaSection = document.getElementById("nuevaVenta");
 
   let productosDisponibles = [];
@@ -17,8 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok) throw new Error("Error al obtener productos");
       renderizarCards();
     } catch (err) {
-      mensajeDiv.textContent = err.message;
-      mensajeDiv.className = "text-red-500";
+      Swal.fire("Error", err.message, "error");
     }
   }
 
@@ -26,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("filtroProductos");
 
     input.addEventListener("input", () => {
-      console.log("Filtrando productos...");
       const texto = input.value.toLowerCase();
       const productosFiltrados = productosDisponibles.filter((producto) =>
         producto.nombre.toLowerCase().includes(texto)
@@ -35,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Renderizar productos como cards
+  // Renderizar productos como Cards
   function renderizarCards(lista = productosDisponibles) {
     productosCardsContainer.innerHTML = "";
 
@@ -60,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
       card.querySelector("button").onclick = () => agregarProducto(producto);
-
       productosCardsContainer.appendChild(card);
     });
   }
@@ -88,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       const inputCantidad = wrapperExistente.querySelector("input");
       inputCantidad.value = parseInt(inputCantidad.value) + 1;
-      mensajeDiv.textContent = ""; // Limpiar mensaje si existía uno previo
       actualizarTotal();
       return;
     }
@@ -136,26 +131,25 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const items = [];
-    let valido = true;
-
     seleccionadosContainer.querySelectorAll("div").forEach((div) => {
       const id = parseInt(div.dataset.productoId);
       const cantidad = parseInt(div.querySelector("input")?.value);
 
-      if (!id || !cantidad || cantidad < 1) {
-        valido = false;
-      } else {
-        const producto = productosDisponibles.find((p) => p.id === id);
-        if (producto) {
-          items.push({ id: producto.id, nombre: producto.nombre, cantidad });
-        }
+      if (id && cantidad && cantidad > 0) {
+        items.push({ id, cantidad });
       }
     });
 
-    if (!valido || items.length === 0) {
-      mensajeDiv.textContent =
-        "Todos los campos deben estar completos y válidos.";
-      mensajeDiv.className = "text-red-500";
+
+    // Validación mínima: debe haber al menos un producto y un método de pago
+    const metodoPago = document.getElementById("metodoPago").value;
+    if (items.length === 0 || !metodoPago) {
+      Swal.fire({
+        icon: "error",
+        title: "Campos incompletos",
+        text: "Seleccioná al menos un producto y el método de pago.",
+        confirmButtonColor: "#E52020",
+      });
       return;
     }
 
@@ -165,15 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (producto) total += producto.precio * item.cantidad;
     });
 
-    // Obtener método de pago
-    const metodoPago = document.getElementById("metodoPago").value;
-    if (!metodoPago) {
-      mensajeDiv.textContent = "Seleccioná un método de pago.";
-      mensajeDiv.className = "text-red-500";
-      return;
-    }
-
-    // Confirmación con SweetAlert2
     Swal.fire({
       title: "¿Confirmar venta?",
       html: `<b>Monto total:</b> $${total.toFixed(2)}<br><b>Método de pago:</b> ${metodoPago}`,
@@ -186,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // Registro de venta
+        // Enviamos la venta al backend
         const ventaData = { items, total, metodoPago };
         try {
           const res = await fetch(`${API_BASE_URL}/api/ventas/compras`, {
@@ -195,22 +180,35 @@ document.addEventListener("DOMContentLoaded", () => {
             body: JSON.stringify(ventaData),
           });
           const data = await res.json();
-          if (!res.ok) throw new Error(data.error || "Error al registrar la venta");
 
-          mensajeDiv.textContent = `✅ Venta registrada correctamente (ID: ${data.venta?.id || "-"})`;
-          mensajeDiv.className = "text-green-600";
-          seleccionadosContainer.innerHTML = "";
-          productosSeleccionados = [];
-          actualizarTotal();
-          obtenerProductos();
-          document.getElementById("metodoPago").value = "";
+          if (res.ok) {
+            Swal.fire({
+              icon: "success",
+              title: "Venta registrada correctamente",
+              text: `ID: ${data.venta?.id || "-"}`,
+              confirmButtonColor: "#10b981"
+            });
+            seleccionadosContainer.innerHTML = "";
+            productosSeleccionados = [];
+            actualizarTotal();
+            obtenerProductos();
+            document.getElementById("metodoPago").value = "";
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error al registrar venta",
+              text: data.error || "Ocurrió un error inesperado.",
+              confirmButtonColor: "#E52020"
+            });
+          }
         } catch (err) {
-          mensajeDiv.textContent = `❌ ${err.message}`;
-          mensajeDiv.className = "text-red-500";
+          Swal.fire({
+            icon: "error",
+            title: "Error de conexión",
+            text: "No se pudo conectar con el servidor.",
+            confirmButtonColor: "#E52020"
+          });
         }
-      } else {
-        mensajeDiv.textContent = "Venta no registrada. Debés confirmar el pago para finalizar.";
-        mensajeDiv.className = "text-yellow-500";
       }
     });
   });
@@ -218,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Inicialización
   async function initProductos() {
     try {
-      await obtenerProductos(); // esto ya llama a renderizarCards()
+      await obtenerProductos();
       filtrarProductos();
     } catch (error) {
       console.error("Error:", error);
