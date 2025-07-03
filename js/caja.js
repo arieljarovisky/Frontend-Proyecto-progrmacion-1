@@ -49,6 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
       filtrados = movimientos.filter((m) => m.tipo === "egreso");
     }
 
+    // Ordenar DESCENDENTE por fecha (más reciente primero)
+    filtrados.sort((a, b) => {
+      // Asumimos que mov.fecha es "YYYY-MM-DD HH:mm:ss"
+      const fa = new Date(a.fecha);
+      const fb = new Date(b.fecha);
+      return fb - fa;
+    });
+
     filtrados.forEach((mov) => {
       const tr = document.createElement("tr");
       console.log("movimiento:", mov.factura_id);
@@ -65,22 +73,20 @@ document.addEventListener("DOMContentLoaded", () => {
         <td class="py-3 px-6 text-center relative">
           <div class="inline-block text-gray-600 cursor-pointer menu-toggle">⋮</div>
           <div class="absolute right-2 mt-1 hidden bg-white border border-gray-300 rounded shadow-lg z-10 menu-opciones">
-            ${
-              mov.tipo === "ingreso" && id
-                ? `
+            ${mov.tipo === "ingreso" && id
+          ? `
         <button class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 generar-factura" data-id="${id}">
          Generar Factura
          </button>
-        ${
-          mov.factura_id
+        ${mov.factura_id
             ? `<a href="${API_BASE_URL}/api/facturas/pdf/${mov.factura_id}.pdf" target="_blank" class="block px-4 py-2 text-sm hover:bg-gray-100">
             Descargar Factura
             </a>`
             : ""
-        }
+          }
        `
-                : '<div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>'
-            }
+          : '<div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>'
+        }
           </div>
         </td>
       `;

@@ -101,6 +101,13 @@ function updateBalanceDisplay(balance) {
   }
 }
 
+function formatoFechaDMY(fechaISO) {
+  // Convierte "2025-07-01" en "01/07/2025"
+  const [yyyy, mm, dd] = fechaISO.split("-");
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+
 async function initDashboard() {
   const contenedor = document.getElementById("metricas");
   const filtroTiempo = document.getElementById("filtroTiempo");
@@ -195,47 +202,32 @@ async function initDashboard() {
       let opciones = [];
 
       if (tipo === "diario") opciones = Object.keys(data.ventas_por_dia);
-      else if (tipo === "semanal")
-        opciones = Object.keys(data.ventas_por_semana);
+      else if (tipo === "semanal") opciones = Object.keys(data.ventas_por_semana);
       else if (tipo === "mensual") opciones = Object.keys(data.ventas_por_mes);
       else if (tipo === "anual") opciones = Object.keys(data.ventas_anuales);
 
-      let defaultValue = opciones[0]; // fallback
-      if (tipo === "diario") {
-        const hoy = new Date();
-        // Formato YYYY-MM-DD
-        const yyyy = hoy.getFullYear();
-        const mm = String(hoy.getMonth() + 1).padStart(2, "0");
-        const dd = String(hoy.getDate()).padStart(2, "0");
-        const hoyStr = `${yyyy}-${mm}-${dd}`;
-        if (opciones.includes(hoyStr)) defaultValue = hoyStr;
-      } else if (tipo === "semanal") {
-        const hoy = new Date();
-        // Conseguir número de semana ISO y año
-        const semana = getWeekNumber(hoy);
-        const anio = hoy.getFullYear();
-        const semanaLabel = `Semana ${semana} - ${anio}`;
-        if (opciones.includes(semanaLabel)) defaultValue = semanaLabel;
-      } else if (tipo === "mensual") {
-        const hoy = new Date();
-        const yyyy = hoy.getFullYear();
-        const mm = String(hoy.getMonth() + 1).padStart(2, "0");
-        const mesStr = `${yyyy}-${mm}`;
-        if (opciones.includes(mesStr)) defaultValue = mesStr;
-      } else if (tipo === "anual") {
-        const yyyy = new Date().getFullYear().toString();
-        if (opciones.includes(yyyy)) defaultValue = yyyy;
-      }
+      // Ordenar opciones descendente (más reciente primero)
+      opciones.sort((a, b) => b.localeCompare(a));
+
+      let defaultValue = opciones[0]; // la más reciente SIEMPRE
 
       opciones.forEach((o) => {
         const option = document.createElement("option");
         option.value = o;
-        option.textContent = o;
+        if (tipo === "diario") {
+          option.textContent = formatoFechaDMY(o); // Muestra DD/MM/YYYY
+        } else if (tipo === "mensual") {
+          // Para YYYY-MM => MM/YYYY
+          const [yyyy, mm] = o.split("-");
+          option.textContent = `${mm}/${yyyy}`;
+        } else {
+          option.textContent = o;
+        }
         if (o === defaultValue) option.selected = true;
         filtroRango.appendChild(option);
       });
 
-      // Render todos los valores según tipo para el gráfico de lineas
+      // Render según tipo para el gráfico de líneas
       if (tipo === "diario") renderVentasChart(data.ingresos_por_dia, data.egresos_por_dia);
       else if (tipo === "semanal") renderVentasChart(data.ingresos_por_semana, data.egresos_por_semana);
       else if (tipo === "mensual") renderVentasChart(data.ingresos_por_mes, data.egresos_por_mes);
@@ -243,6 +235,7 @@ async function initDashboard() {
 
       filtroRango.dispatchEvent(new Event("change"));
     });
+
 
     // Función para obtener número de semana ISO
     function getWeekNumber(date) {
@@ -306,7 +299,7 @@ function createCard(titulo, contenido, extraClass = "") {
   return div;
 }
 function modoOscuro() {
-  const html = document.documentElement; 
+  const html = document.documentElement;
   html.classList.toggle("dark");
 
   // Guardar la preferencia
