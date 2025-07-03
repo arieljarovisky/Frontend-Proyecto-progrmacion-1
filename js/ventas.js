@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.innerHTML = `
       <div>
         <h3 class="text-md font-semibold text-gray-800 dark:text-white">${producto.nombre}</h3>
+        <p class="text-gray-600 mt-1 mb-2 dark:text-gray-400">ID: <span class="font-medium text-black-600">${producto.id}</span></p>
         <p class="text-gray-600 mt-1 mb-2 dark:text-gray-400">Talle: <span class="font-medium text-black-600">${producto.talle}</span></p>
         <p class="text-gray-600 mt-1 mb-2 dark:text-gray-400">Precio: <span class="font-medium text-green-600">$${producto.precio}</span></p>
         <p class="text-gray-600 mt-1 mb-2 dark:text-gray-400">Stock: <span class="font-medium text-black-600">${producto.stock}</span></p>
