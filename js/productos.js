@@ -1,4 +1,9 @@
 let productosGlobal = [];
+let paginaActual = 1;
+let totalPaginas = 1;
+const porPagina = 9;
+let ultimoFiltro = "";
+
 
 // Función para renderizar tarjetas de productos
 function renderizarProductos(productos) {
@@ -193,20 +198,56 @@ async function agregarProducto(datos) {
     }
 }
 
+function renderizarPaginadorProductos() {
+    const paginador = document.getElementById("paginadorProductosVista");
+    if (!paginador) return;
+
+    paginador.innerHTML = "";
+    if (totalPaginas <= 1) return;
+
+    for (let i = 1; i <= totalPaginas; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "px-3 py-1 rounded mx-1 " + (i === paginaActual ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700");
+        btn.onclick = () => {
+            if (i !== paginaActual) {
+                initProductos(i, ultimoFiltro);
+            }
+        };
+        paginador.appendChild(btn);
+    }
+}
+
+
 // Función para inicializar todo
-async function initProductos() {
+async function initProductos(pagina = 1, filtro = "") {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/productos`);
-        if (!response.ok) {
-            throw new Error('Error al cargar los productos');
-        }
-        productosGlobal = await response.json();
+        let url = `${API_BASE_URL}/api/productos?page=${pagina}&per_page=${porPagina}`;
+        if (filtro) url += `&search=${encodeURIComponent(filtro)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok) throw new Error('Error al cargar los productos');
+        productosGlobal = data.productos;
+        paginaActual = data.page;
+        totalPaginas = data.total_pages;
+
         renderizarProductos(productosGlobal);
-        filtrarProductos();
+        renderizarPaginadorProductos();
     } catch (error) {
         console.error('Error:', error);
     }
 }
+
+function setFiltroListener() {
+    const input = document.getElementById('filtroProductosVista');
+    if (!input) return;
+    input.addEventListener('input', () => {
+        ultimoFiltro = input.value.trim();
+        initProductos(1, ultimoFiltro); // Siempre vuelve a página 1 cuando se filtra
+    });
+}
+
 
 // Función para refrescar productos
 async function refrescarProductos() {
@@ -222,6 +263,7 @@ async function refrescarProductos() {
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     initProductos();
+    setFiltroListener();
     const btnAgregar = document.getElementById('btnAgregarProducto');
     if (btnAgregar) {
         btnAgregar.addEventListener('click', agregarProductoPopup);

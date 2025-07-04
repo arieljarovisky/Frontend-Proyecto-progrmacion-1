@@ -3,10 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const filtroCaja = document.getElementById("filtroCaja");
   const cajaSection = document.getElementById("caja");
 
+  // Contenedor de la tabla
   const tabla = document.createElement("table");
   tabla.className =
     "min-w-full bg-white rounded-2xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300";
-
   const thead = document.createElement("thead");
   thead.innerHTML = `
     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal dark:bg-gray-700 dark:text-gray-300">
@@ -23,15 +23,33 @@ document.addEventListener("DOMContentLoaded", () => {
   tabla.appendChild(tbody);
   cajaSection.appendChild(tabla);
 
-  let movimientos = [];
+  // PAGINADOR
+  const paginadorCaja = document.createElement("div");
+  paginadorCaja.className = "flex justify-center mt-4";
+  cajaSection.appendChild(paginadorCaja);
 
-  function cargarCaja() {
-    fetch(`${API_BASE_URL}/api/caja`)
+  // Variables globales para paginación y movimientos
+  let movimientos = [];
+  let paginaActualCaja = 1;
+  let totalPaginasCaja = 1;
+  const porPaginaCaja = 10;
+
+  function cargarCaja(pagina = 1) {
+    // Filtrado por tipo
+    const filtro = filtroCaja.value;
+    let url = `${API_BASE_URL}/api/caja?page=${pagina}&per_page=${porPaginaCaja}`;
+    if (filtro === "ventas") url += "&tipo=ingreso";
+    else if (filtro === "pagos") url += "&tipo=egreso";
+
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         movimientos = data.movimientos || [];
-        balanceDia.textContent = `Balance: $${data.saldo}`;
+        balanceDia.textContent = `Balance: $${data.saldo ?? 0}`;
+        paginaActualCaja = data.page || 1;
+        totalPaginasCaja = data.total_pages || 1;
         renderizarTabla();
+        renderizarPaginadorCaja();
       })
       .catch((error) => {
         console.error("Error al cargar la caja:", error);
@@ -39,30 +57,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderizarTabla() {
-    const filtro = filtroCaja.value;
     tbody.innerHTML = "";
 
-    let filtrados = movimientos;
-    if (filtro === "ventas") {
-      filtrados = movimientos.filter((m) => m.tipo === "ingreso");
-    } else if (filtro === "pagos") {
-      filtrados = movimientos.filter((m) => m.tipo === "egreso");
-    }
-
-    // Ordenar DESCENDENTE por fecha (más reciente primero)
-    filtrados.sort((a, b) => {
-      // Asumimos que mov.fecha es "YYYY-MM-DD HH:mm:ss"
-      const fa = new Date(a.fecha);
-      const fb = new Date(b.fecha);
-      return fb - fa;
+    // Ordenar de más reciente a más antiguo
+    let movimientosOrdenados = [...movimientos].sort((a, b) => {
+      // Soporta formato "YYYY-MM-DD" o similar (mejor si lo devuelve así el back)
+      return new Date(b.fecha) - new Date(a.fecha);
     });
 
-    filtrados.forEach((mov) => {
+    movimientosOrdenados.forEach((mov) => {
       const tr = document.createElement("tr");
-      console.log("movimiento:", mov.factura_id);
       tr.className =
         "border-none border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700";
-
       const id = mov.id || "";
 
       tr.innerHTML = `
@@ -73,24 +79,25 @@ document.addEventListener("DOMContentLoaded", () => {
         <td class="py-3 px-6 text-center relative">
           <div class="inline-block text-gray-600 cursor-pointer menu-toggle">⋮</div>
           <div class="absolute right-2 mt-1 hidden bg-white border border-gray-300 rounded shadow-lg z-10 menu-opciones">
-            ${mov.tipo === "ingreso" && id
-          ? `
+            ${
+              mov.tipo === "ingreso" && id
+                ? `
         <button class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 generar-factura" data-id="${id}">
          Generar Factura
          </button>
-        ${mov.factura_id
+        ${
+          mov.factura_id
             ? `<a href="${API_BASE_URL}/api/facturas/pdf/${mov.factura_id}.pdf" target="_blank" class="block px-4 py-2 text-sm hover:bg-gray-100">
             Descargar Factura
             </a>`
             : ""
-          }
-       `
-          : '<div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>'
         }
+       `
+                : '<div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>'
+            }
           </div>
         </td>
       `;
-
       tbody.appendChild(tr);
     });
 
@@ -128,8 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then((res) => res.json())
           .then((res) => {
             alert("Factura generada correctamente.");
-            console.log("Factura generada:", res);
-            cargarCaja();
+            cargarCaja(paginaActualCaja);
           })
           .catch((err) => {
             console.error("Error al generar la factura:", err);
@@ -139,6 +145,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  filtroCaja.addEventListener("change", renderizarTabla);
-  cargarCaja();
+  function renderizarPaginadorCaja() {
+    paginadorCaja.innerHTML = "";
+    if (totalPaginasCaja <= 1) return;
+
+    for (let i = 1; i <= totalPaginasCaja; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className =
+        "px-3 py-1 rounded mx-1 " +
+        (i === paginaActualCaja
+          ? "bg-blue-600 text-white"
+          : "bg-gray-200 text-gray-700");
+      btn.onclick = () => {
+        if (i !== paginaActualCaja) cargarCaja(i);
+      };
+      paginadorCaja.appendChild(btn);
+    }
+  }
+
+  filtroCaja.addEventListener("change", () => cargarCaja(1));
+  cargarCaja(1);
 });
