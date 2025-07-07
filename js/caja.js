@@ -59,9 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderizarTabla() {
     tbody.innerHTML = "";
 
-    // Ordenar de más reciente a más antiguo
     let movimientosOrdenados = [...movimientos].sort((a, b) => {
-      // Soporta formato "YYYY-MM-DD" o similar (mejor si lo devuelve así el back)
       return new Date(b.fecha) - new Date(a.fecha);
     });
 
@@ -82,18 +80,26 @@ document.addEventListener("DOMContentLoaded", () => {
             ${
               mov.tipo === "ingreso" && id
                 ? `
-        <button class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 generar-factura" data-id="${id}">
-         Generar Factura
-         </button>
-        ${
-          mov.factura_id
-            ? `<a href="${API_BASE_URL}/api/facturas/pdf/${mov.factura_id}.pdf" target="_blank" class="block px-4 py-2 text-sm hover:bg-gray-100">
-            Descargar Factura
-            </a>`
-            : ""
-        }
-       `
-                : '<div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>'
+            <button class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 generar-factura" data-id="${id}">
+              Generar Factura
+            </button>
+            ${
+              mov.factura_id
+                ? `<a href="${API_BASE_URL}/api/facturas/pdf/${mov.factura_id}.pdf" target="_blank" class="block px-4 py-2 text-sm hover:bg-gray-100">
+                  Descargar Factura
+                  </a>`
+                : ""
+            }
+            <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 eliminar-movimiento" data-id="${id}">
+              Eliminar Movimiento
+            </button>
+            `
+                : `
+            <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 eliminar-movimiento" data-id="${id}">
+              Eliminar Movimiento
+            </button>
+            <div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>
+            `
             }
           </div>
         </td>
@@ -119,6 +125,43 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    // Event listener para eliminar movimiento con SweetAlert
+    document.querySelectorAll(".eliminar-movimiento").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const movimientoId = btn.getAttribute("data-id");
+        Swal.fire({
+          title: "¿Eliminar movimiento?",
+          text: "Esta acción no se puede deshacer.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#e53e3e",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(`${API_BASE_URL}/api/caja/movimiento/${movimientoId}`, {
+              method: "DELETE",
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                Swal.fire(
+                  data.error ? "Error" : "Eliminado",
+                  data.message || data.error || "Movimiento eliminado.",
+                  data.error ? "error" : "success"
+                );
+                cargarCaja(paginaActualCaja);
+              })
+              .catch((err) => {
+                Swal.fire("Error", "No se pudo eliminar el movimiento", "error");
+                console.error(err);
+              });
+          }
+        });
+      });
+    });
+
+    // Factura
     document.querySelectorAll(".generar-factura").forEach((btn) => {
       btn.addEventListener("click", () => {
         const ventaId = btn.getAttribute("data-id");
