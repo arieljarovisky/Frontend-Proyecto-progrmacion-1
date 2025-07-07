@@ -76,32 +76,31 @@ document.addEventListener("DOMContentLoaded", () => {
         <td class="py-3 px-6 text-right">$${mov.monto.toFixed(2)}</td>
         <td class="py-3 px-6 text-center relative">
           <div class="inline-block text-gray-600 cursor-pointer menu-toggle">⋮</div>
-          <div class="absolute right-2 mt-1 hidden bg-white border border-gray-300 rounded shadow-lg z-10 menu-opciones">
-            ${
-              mov.tipo === "ingreso" && id
-                ? `
-            <button class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 generar-factura" data-id="${id}">
-              Generar Factura
-            </button>
-            ${
-              mov.factura_id
-                ? `<a href="${API_BASE_URL}/api/facturas/pdf/${mov.factura_id}.pdf" target="_blank" class="block px-4 py-2 text-sm hover:bg-gray-100">
-                  Descargar Factura
-                  </a>`
-                : ""
-            }
-            <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 eliminar-movimiento" data-id="${id}">
-              Eliminar Movimiento
-            </button>
-            `
-                : `
-            <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 eliminar-movimiento" data-id="${id}">
-              Eliminar Movimiento
-            </button>
-            <div class="px-4 py-2 text-sm text-gray-400">Sin acciones</div>
-            `
-            }
-          </div>
+          <div class="absolute right-2 mt-1 hidden bg-white border border-gray-300 rounded shadow-lg z-10 menu-opciones dark:bg-gray-800">
+  ${mov.tipo === "ingreso" && id
+          ? `
+      <button class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-100 generar-factura" data-id="${id}">
+        Generar Factura
+      </button>
+      ${mov.factura_id
+            ? `<a href="${API_BASE_URL}/api/facturas/pdf/${mov.factura_id}.pdf" target="_blank" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-100">
+              Descargar Factura
+            </a>`
+            : ""
+          }
+      <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-gray-700 eliminar-movimiento" data-id="${id}">
+        Eliminar Movimiento
+      </button>
+      `
+          : `
+      <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-gray-700 eliminar-movimiento" data-id="${id}">
+        Eliminar Movimiento
+      </button>
+      <div class="px-4 py-2 text-sm text-gray-400 dark:text-gray-500">Sin acciones</div>
+      `
+        }
+</div>
+
         </td>
       `;
       tbody.appendChild(tr);
