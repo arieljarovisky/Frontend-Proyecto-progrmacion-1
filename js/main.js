@@ -174,26 +174,40 @@ async function initDashboard() {
     extraContent.id = "extra-dashboard";
     extraContent.className = "col-span-full mt-6 space-y-6";
 
+    const respProductos = await fetch(`${API_BASE_URL}/api/productos?per_page=9999`);
+    const dataProd = await respProductos.json();
+    const productos = dataProd.productos || dataProd;
+
+    const productosBajoStock = productos.filter(
+      p => Number(p.stock) <= Number(p.stock_minimo ?? 5)
+    );
+
+    const listaBajoStock = productosBajoStock.length
+      ? productosBajoStock.map(
+        p =>
+          `<li>${p.nombre} <span class="text-xs text-gray-400">(Stock: ${p.stock} / Mínimo: ${p.stock_minimo})</span></li>`
+      ).join("")
+      : `<li class="text-green-600 dark:text-green-400">Ningún producto está en alerta de stock bajo.</li>`;
+
     extraContent.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-white">
-        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
-          <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
-            <li>Alcohol en gel - Cant: 4</li>
-            <li>Guantes - Cant: 3</li>
-            <li>Mascarillas - Cant: 6</li>
-          </ul>
-        </div>
-        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
-          <h4 class="text-lg font-semibold mb-2">Productos con vencimiento próximo</h4>
-          <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
-            <li>Vacuna Rabia - 2025-06-10</li>
-            <li>Desinfectante - 2025-06-15</li>
-            <li>Suero Oral - 2025-06-22</li>
-          </ul>
-        </div>
-      </div>
-    `;
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-white">
+    <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
+      <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
+      <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
+        ${listaBajoStock}
+      </ul>
+    </div>
+    <!-- Podés dejar la otra tarjeta de "productos con vencimiento próximo" igual o también hacerla dinámica en el futuro -->
+    <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
+      <h4 class="text-lg font-semibold mb-2">Productos con vencimiento próximo</h4>
+      <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
+        <li>Vacuna Rabia - 2025-06-10</li>
+        <li>Desinfectante - 2025-06-15</li>
+        <li>Suero Oral - 2025-06-22</li>
+      </ul>
+    </div>
+  </div>
+`;
     contenedor.parentElement.appendChild(extraContent);
 
     filtroTiempo.addEventListener("change", () => {

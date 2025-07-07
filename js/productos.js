@@ -11,7 +11,7 @@ function renderizarProductos(productos) {
     contenedor.innerHTML = ''; // Limpia contenido anterior
 
     productos.forEach(producto => {
-        const tarjeta = document.createElement('div');  
+        const tarjeta = document.createElement('div');
         tarjeta.className = 'bg-white p-4 rounded-2xl shadow-md dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300';
 
         tarjeta.innerHTML = `
@@ -65,6 +65,8 @@ function agregarProductoPopup() {
                 <input id="swal-precio" type="number" class="swal2-input" placeholder="Precio ($)">
                 <label for="swal-stock">Stock:</label>
                 <input id="swal-stock" type="number" class="swal2-input" placeholder="Stock (unidades)">
+                <label for="swal-stock-minimo">Stock Mínimo de Alerta:</label>
+                <input id="swal-stock-minimo" type="number" min="0" class="swal2-input" placeholder="Ej: 5">
             </div>
         `,
         focusConfirm: false,
@@ -76,11 +78,12 @@ function agregarProductoPopup() {
             const descripcion = document.getElementById('swal-descripcion').value;
             const precio = parseFloat(document.getElementById('swal-precio').value);
             const stock = parseInt(document.getElementById('swal-stock').value);
+            const stockMinimo = parseInt(document.getElementById('swal-stock-minimo').value) || 5;
             if (!nombre || isNaN(precio) || isNaN(stock)) {
                 Swal.showValidationMessage('Todos los campos obligatorios deben estar completos.');
                 return false;
             }
-            return { nombre, descripcion, precio, stock };
+            return { nombre, descripcion, precio, stock, stockMinimo };
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -130,7 +133,9 @@ function editarProductoPopup(producto) {
                 <label for="swal-input-precio">Precio:</label>
                 <input id="swal-input-precio" type="number" class="swal2-input" value="${producto.precio}">
                 <label for="swal-input-stock">Stock:</label>
-                <input id="swal-input-stock" type="number" class="swal2-input" value="${producto.stock}">
+                <input id="swal-input-stock" type="number" class="swal2-input" value="${producto.stock}"><br>
+                <label for="swal-input-stock-minimo">Stock Mínimo de Alerta:</label>
+                <input id="swal-input-stock-minimo" type="number" min="0" class="swal2-input" value="${producto.stock_minimo || 5}">
             </div>
         `,
 
@@ -143,7 +148,8 @@ function editarProductoPopup(producto) {
                 nombre: document.getElementById('swal-input-nombre').value,
                 descripcion: document.getElementById('swal-input-descripcion').value,
                 precio: parseFloat(document.getElementById('swal-input-precio').value),
-                stock: parseInt(document.getElementById('swal-input-stock').value)
+                stock: parseInt(document.getElementById('swal-input-stock').value),
+                stock_minimo: parseInt(document.getElementById('swal-input-stock-minimo').value) || 5
             }
         }
     }).then((result) => {
@@ -162,7 +168,7 @@ async function editarProducto(id, datos) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
-        
+
         const data = await response.json();
 
         if (!response.ok) {
