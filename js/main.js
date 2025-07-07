@@ -1,4 +1,4 @@
-// Función para mostrar la sección seleccionada y ocultar las demás
+// Permisos por rol
 const permisosPorRol = {
   admin: [
     "inicio",
@@ -14,9 +14,9 @@ const permisosPorRol = {
   ],
   empleado: ["caja", "nuevaVenta", "pagos"],
 };
+
 function filtrarBotonesPorRol(permisosPorRol) {
   const rol = localStorage.getItem("rol");
-
   const botones = document.querySelectorAll("aside button");
 
   botones.forEach((btn) => {
@@ -24,7 +24,6 @@ function filtrarBotonesPorRol(permisosPorRol) {
     const coincide = permisosPorRol[rol]?.some((seccion) =>
       onclick.includes(seccion)
     );
-
     if (!coincide) {
       btn.classList.add("hidden");
     }
@@ -51,7 +50,6 @@ function showSection(sectionId) {
 
   // Verificamos si el rol tiene permiso
   if (!permisosPorRol[rol]?.includes(sectionId)) {
-
     Swal.fire({
       icon: "error",
       title: "Acceso denegado",
@@ -60,7 +58,7 @@ function showSection(sectionId) {
     });
     return;
   } else {
-    initDashboard()
+    initDashboard();
   }
 
   const sections = document.querySelectorAll("main > section");
@@ -86,6 +84,7 @@ function showSection(sectionId) {
 
   localStorage.setItem("ultimaSeccion", sectionId);
 }
+
 function updateBalanceDisplay(balance) {
   const balanceCaja = document.getElementById("balanceCaja");
   const balanceValor = document.getElementById("balanceValor");
@@ -107,7 +106,6 @@ function formatoFechaDMY(fechaISO) {
   return `${dd}/${mm}/${yyyy}`;
 }
 
-
 async function initDashboard() {
   const contenedor = document.getElementById("metricas");
   const filtroTiempo = document.getElementById("filtroTiempo");
@@ -116,7 +114,7 @@ async function initDashboard() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/ventas/metricas`);
     const data = await response.json();
-    console.log("Datos de métricas:", data);
+
     if (!response.ok) {
       contenedor.innerHTML = `
         <div class="text-red-600 font-semibold text-center col-span-4">
@@ -131,29 +129,28 @@ async function initDashboard() {
       "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
     // Tarjeta Balance
-    // Balance real usando ingresos y pagos
     const balance = data.saldo_actual;
 
     const divBalance = document.createElement("div");
-    divBalance.className = "bg-white shadow rounded-2xl p-4";
-    divBalance.id = "balanceCaja"; // <- necesario para aplicar color dinámico
+    divBalance.className = "bg-white shadow rounded-2xl p-4 dark:bg-gray-800";
+    divBalance.id = "balanceCaja";
     divBalance.innerHTML = `
-  <h3 class="text-gray-600 text-sm">Balance</h3>
-  <p id="balanceValor" class="text-xl font-bold">$${balance.toFixed(2)}</p> 
+      <h3 class="text-gray-800 text-sm dark:text-gray-400">Balance</h3>
+      <p id="balanceValor" class="text-xl font-bold text-gray-900 dark:text-white">$${balance.toFixed(2)}</p>
     `;
 
     contenedor.appendChild(divBalance);
-    updateBalanceDisplay(balance); // <-  color rojo o verde dependiendo del balance
+    updateBalanceDisplay(balance);
 
     // Tarjeta Ventas / Pagos
     const ventasPagos = document.createElement("div");
     ventasPagos.className =
-      "bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200";
+      "bg-white shadow rounded-2xl p-4 dark:bg-gray-800";
     ventasPagos.innerHTML = `
-      <h3 class="text-gray-600 text-sm dark:text-gray-400">Total Ventas</h3>
-      <p class="text-xl font-semibold">${data.total_ventas}</p>
-      <h3 class="text-gray-600 text-sm mt-2 dark:text-gray-400">Total Pagos</h3>
-      <p class="text-xl font-semibold">${data.total_pagos}</p>
+      <h3 class="text-gray-800 text-sm dark:text-gray-400">Total Ventas</h3>
+      <p class="text-xl font-semibold text-gray-900 dark:text-white">${data.total_ventas}</p>
+      <h3 class="text-gray-800 text-sm mt-2 dark:text-gray-400">Total Pagos</h3>
+      <p class="text-xl font-semibold text-gray-900 dark:text-white">${data.total_pagos}</p>
     `;
     contenedor.appendChild(ventasPagos);
 
@@ -161,15 +158,14 @@ async function initDashboard() {
     contenedor.appendChild(
       createCard(
         "Producto más vendido",
-        `${data.producto_mas_vendido.nombre}<br><span class='text-sm text-gray-500'>Cantidad: ${data.producto_mas_vendido.cantidad}</span>`
+        `${data.producto_mas_vendido.nombre}<br><span class='text-sm text-gray-500 dark:text-gray-300'>Cantidad: ${data.producto_mas_vendido.cantidad}</span>`
       )
     );
 
-    // Borrar secciones extra anteriores si existen
+    // Extra dashboard (bajo stock, vencimiento, etc)
     const seccionesAnteriores = document.getElementById("extra-dashboard");
     if (seccionesAnteriores) seccionesAnteriores.remove();
 
-    // Crear secciones extra
     const extraContent = document.createElement("div");
     extraContent.id = "extra-dashboard";
     extraContent.className = "col-span-full mt-6 space-y-6";
@@ -185,29 +181,28 @@ async function initDashboard() {
     const listaBajoStock = productosBajoStock.length
       ? productosBajoStock.map(
         p =>
-          `<li>${p.nombre} <span class="text-xs text-gray-400">(Stock: ${p.stock} / Mínimo: ${p.stock_minimo})</span></li>`
+          `<li>${p.nombre} <span class="text-xs text-gray-600 dark:text-gray-400">(Stock: ${p.stock} / Mínimo: ${p.stock_minimo})</span></li>`
       ).join("")
       : `<li class="text-green-600 dark:text-green-400">Ningún producto está en alerta de stock bajo.</li>`;
 
     extraContent.innerHTML = `
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-white">
-    <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
-      <h4 class="text-lg font-semibold mb-2">Productos con bajo stock</h4>
-      <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
-        ${listaBajoStock}
-      </ul>
-    </div>
-    <!-- Podés dejar la otra tarjeta de "productos con vencimiento próximo" igual o también hacerla dinámica en el futuro -->
-    <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
-      <h4 class="text-lg font-semibold mb-2">Productos con vencimiento próximo</h4>
-      <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-200">
-        <li>Vacuna Rabia - 2025-06-10</li>
-        <li>Desinfectante - 2025-06-15</li>
-        <li>Suero Oral - 2025-06-22</li>
-      </ul>
-    </div>
-  </div>
-`;
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-white">
+        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
+          <h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Productos con bajo stock</h4>
+          <ul class="list-disc list-inside text-sm text-gray-800 dark:text-gray-200">
+            ${listaBajoStock}
+          </ul>
+        </div>
+        <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800 dark:text-gray-200">
+          <h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Productos con vencimiento próximo</h4>
+          <ul class="list-disc list-inside text-sm text-gray-800 dark:text-gray-200">
+            <li>Vacuna Rabia - 2025-06-10</li>
+            <li>Desinfectante - 2025-06-15</li>
+            <li>Suero Oral - 2025-06-22</li>
+          </ul>
+        </div>
+      </div>
+    `;
     contenedor.parentElement.appendChild(extraContent);
 
     filtroTiempo.addEventListener("change", () => {
@@ -220,18 +215,15 @@ async function initDashboard() {
       else if (tipo === "mensual") opciones = Object.keys(data.ventas_por_mes);
       else if (tipo === "anual") opciones = Object.keys(data.ventas_anuales);
 
-      // Ordenar opciones descendente (más reciente primero)
       opciones.sort((a, b) => b.localeCompare(a));
-
-      let defaultValue = opciones[0]; // la más reciente SIEMPRE
+      let defaultValue = opciones[0];
 
       opciones.forEach((o) => {
         const option = document.createElement("option");
         option.value = o;
         if (tipo === "diario") {
-          option.textContent = formatoFechaDMY(o); // Muestra DD/MM/YYYY
+          option.textContent = formatoFechaDMY(o);
         } else if (tipo === "mensual") {
-          // Para YYYY-MM => MM/YYYY
           const [yyyy, mm] = o.split("-");
           option.textContent = `${mm}/${yyyy}`;
         } else {
@@ -250,25 +242,6 @@ async function initDashboard() {
       filtroRango.dispatchEvent(new Event("change"));
     });
 
-
-    // Función para obtener número de semana ISO
-    function getWeekNumber(date) {
-      const temp = new Date(date.getTime());
-      temp.setHours(0, 0, 0, 0);
-      // Jueves en la semana actual decide el año
-      temp.setDate(temp.getDate() + 3 - ((temp.getDay() + 6) % 7));
-      const week1 = new Date(temp.getFullYear(), 0, 4);
-      return (
-        1 +
-        Math.round(
-          ((temp.getTime() - week1.getTime()) / 86400000 -
-            3 +
-            ((week1.getDay() + 6) % 7)) /
-          7
-        )
-      );
-    }
-
     filtroRango.addEventListener("change", () => {
       const tipo = filtroTiempo.value;
       const rango = filtroRango.value;
@@ -279,14 +252,12 @@ async function initDashboard() {
         mensual: data.ingresos_por_mes,
         anual: data.ingresos_anuales,
       };
-
       const egresosData = {
         diario: data.egresos_por_dia,
         semanal: data.egresos_por_semana,
         mensual: data.egresos_por_mes,
         anual: data.egresos_anuales,
       };
-
       const ingresos = ingresosData[tipo]?.[rango] || 0;
       const egresos = egresosData[tipo]?.[rango] || 0;
 
@@ -302,28 +273,26 @@ async function initDashboard() {
   }
 }
 
-// Función utilitaria
+// Función utilitaria para tarjetas
 function createCard(titulo, contenido, extraClass = "") {
   const div = document.createElement("div");
   div.className = "bg-white shadow rounded-2xl p-4 dark:bg-gray-800";
   div.innerHTML = `
-    <h3 class="text-gray-600 text-sm dark:text-gray-400">${titulo}</h3>
-    <p class="text-xl font-bold dark:text-white ${extraClass}">${contenido}</p>
+    <h3 class="text-gray-800 text-sm dark:text-gray-400">${titulo}</h3>
+    <p class="text-xl font-bold text-gray-900 dark:text-white ${extraClass}">${contenido}</p>
   `;
   return div;
 }
+
 function modoOscuro() {
   const html = document.documentElement;
   html.classList.toggle("dark");
-
-  // Guardar la preferencia
   if (html.classList.contains("dark")) {
     localStorage.setItem("modo", "oscuro");
   } else {
     localStorage.setItem("modo", "claro");
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const themeSwitch = document.getElementById("themeSwitch");
@@ -339,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
     themeSwitch.checked = false;
   }
 
-  // Escucha el cambio del switch
   themeSwitch.addEventListener("change", () => {
     if (themeSwitch.checked) {
       html.classList.add("dark");
@@ -350,8 +318,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
-
 
 window.addEventListener("DOMContentLoaded", () => {
   // Mostrar usuario logueado en la topbar
@@ -378,7 +344,7 @@ window.addEventListener("DOMContentLoaded", () => {
     logoutBtn.onclick = () => {
       localStorage.removeItem("usuarioLogueado");
       localStorage.removeItem("rol");
-      window.location.href = "login.html"; // Cambia el nombre si tu login está en otra ruta
+      window.location.href = "login.html";
     };
   }
 

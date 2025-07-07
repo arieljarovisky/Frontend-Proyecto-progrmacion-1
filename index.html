@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="shortcut icon" href="./assets/CP_Blanco.svg" type="image/x-icon">
   <title>Caja Plus - Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -19,8 +20,13 @@
   <nav id="topbar"
     class="w-full flex items-center justify-between px-6 py-5 bg-white dark:bg-gray-900 shadow-md fixed top-0 left-0 z-50 h-16">
     <!-- Logo o nombre de app -->
-    <div class="flex items-center gap-2">
-      <span class="text-xl font-bold text-blue-700 dark:text-blue-300">Caja Plus</span>
+    <div>
+      <a href="./index.html" class="flex items-center" onclick="showSection('inicio')">
+        <img src="./assets/CP_Azul.svg" alt="Logo Claro" id="logoClaro" class="w-13 h-12 block dark:hidden">
+        <img src="./assets/CP_Blanco.svg" alt="Logo Oscuro" id="logoOscuro" class="w-13 h-12 hidden dark:block">
+        <span class="text-2xl font-bold text-blue-800 dark:text-white">Caja Plus</span>
+      </a>
+
     </div>
 
     <div class="flex items-center gap-6">
@@ -54,7 +60,7 @@
   <!-- Sidebar -->
   <aside class="w-64 bg-white shadow-lg p-4 flex flex-col justify-between dark:bg-gray-800 ">
     <div>
-      <h1 class="text-2xl font-bold mb-6 text-blue-600">Caja Plus</h1>
+      <h1 class="text-2xl font-bold mb-6 text-blue-600 dark:text-white">Caja Plus</h1>
       <nav class="space-y-2 dark:text-white">
         <button
           class="w-full text-left text-gray-700 hover:bg-blue-100 px-4 py-2 rounded dark:hover:bg-gray-700 dark:text-gray-100"
@@ -106,11 +112,11 @@
 
       <div id="graficosDashboard" class="mt-8 grid grid-cols-3 lg:grid-cols-3 gap-6 dark:text-white">
         <div class="bg-white shadow rounded-2xl p-4 dark:bg-gray-800">
-          <h4 class="text-lg font-semibold mb-2">Ingresos vs Egresos</h4>
+          <h4 class="text-lg font-semibold mb-2 text-gray-800 dark:text-white">Ingresos vs Egresos</h4>
           <canvas id="ingresosEgresosChart" height="150"></canvas>
         </div>
         <div class="bg-white shadow rounded-2xl p-4 w-full col-span-2 dark:bg-gray-800">
-          <h4 class="text-lg font-semibold mb-2 col-span-1 w-full dark:text-white">Gráfico de Ventas</h4>
+          <h4 class="text-lg font-semibold mb-2 col-span-1 w-full text-gray-800 dark:text-white">Gráfico de Ventas</h4>
 
           <canvas id="ventasChart" height="150"></canvas>
         </div>
@@ -125,8 +131,8 @@
       <input id="filtroProductos" type="text" placeholder="Buscar productos..."
         class="mb-4 p-2 border rounded-2xl w-full dark:bg-gray-700" />
       <form id="ventaForm" class="flex gap-6 flex-col lg:flex-row">
-        <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div> 
-        
+        <div id="productosContainer" class="flex flex-wrap gap-4 w-full lg:w-3/4"></div>
+
 
         <!-- Derecha: Productos seleccionados -->
         <div class="w-full lg:w-1/3">

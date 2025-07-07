@@ -1,47 +1,36 @@
 let ventasChartInstance = null;
 let ingresosChartInstance = null;
 
+// Detecta si está en modo oscuro
+function isDarkMode() {
+  return document.documentElement.classList.contains('dark');
+}
+
 function parsearSemanaLabel(label) {
-  // Ejemplo label: "10-16 marzo 2025"
   if (!label) return null;
   const partes = label.split(" ");
   if (partes.length < 3) return null;
-
-  // Primer día de la semana
   const rangoDias = partes[0].split("-");
   const dia = parseInt(rangoDias[0]);
   const mesTexto = partes[1].toLowerCase();
   const year = parseInt(partes[2]);
-
-  // Diccionario de meses en español
   const meses = {
     "enero": 0, "febrero": 1, "marzo": 2, "abril": 3, "mayo": 4, "junio": 5,
     "julio": 6, "agosto": 7, "septiembre": 8, "octubre": 9, "noviembre": 10, "diciembre": 11
   };
   const mes = meses[mesTexto];
   if (mes === undefined) return null;
-
-  // Devuelve un objeto Date
   return new Date(year, mes, dia);
 }
 
+// --- RENDER GRAFICO VENTAS ---
 function renderVentasChart(ventasData, pagosData) {
   pagosData = pagosData || {};
-
-  // LOG 1: Datos crudos que llegan a la función
-  console.log("DEBUG - ventasData recibido:", ventasData);
-  console.log("DEBUG - pagosData recibido:", pagosData);
 
   const ventasLabels = Object.keys(ventasData);
   const pagosLabels = Object.keys(pagosData);
   let labels = Array.from(new Set([...ventasLabels, ...pagosLabels]));
 
-  // LOG 2: Labels por separado
-  console.log("DEBUG - ventasLabels:", ventasLabels);
-  console.log("DEBUG - pagosLabels:", pagosLabels);
-
-  // Ordenar labels correctamente:
-  // Si los labels parecen semanas (formato "10-16 marzo 2025"), ordenar por fecha de inicio
   if (labels.length > 0 && labels[0].match(/^\d+-\d+ /)) {
     labels.sort((a, b) => {
       const fa = parsearSemanaLabel(a);
@@ -50,75 +39,67 @@ function renderVentasChart(ventasData, pagosData) {
       return fa - fb;
     });
   } else {
-    labels.sort(); // alfabéticamente para otros casos
+    labels.sort();
   }
-
-  // LOG 3: Labels finales alineados (eje X del gráfico)
-  console.log("DEBUG - Labels (eje X):", labels);
 
   const ventasMapeadas = labels.map(lab => ventasData[lab] || 0);
   const pagosMapeados = labels.map(lab => pagosData[lab] || 0);
 
-  // LOG 4: Arrays alineados a graficar (¿hay valores ≠ 0?)
-  console.log("DEBUG - ventas mapeadas:", ventasMapeadas);
-  console.log("DEBUG - pagos mapeadas:", pagosMapeados);
-
-  const datasets = [
-    {
-      label: "Ventas",
-      data: ventasMapeadas,
-      backgroundColor: "rgba(51, 51, 255, 0.2)",
-      borderColor: "#3399ff",
-      borderWidth: 2,
-      tension: 0.3,
-    },
-    {
-      label: "Pagos",
-      data: pagosMapeados,
-      backgroundColor: "rgba(255, 99, 132, 0.2)",
-      borderColor: "#ff6384",
-      borderWidth: 2,
-      tension: 0.3,
-    }
-  ];
+  // Colores dinámicos según modo
+  const colorTexto = isDarkMode() ? "#fff" : "#222";
+  const gridColor = isDarkMode() ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)";
 
   const ctx = document.getElementById("ventasChart").getContext("2d");
-
-  if (ventasChartInstance) {
-    ventasChartInstance.destroy();
-  }
+  if (ventasChartInstance) ventasChartInstance.destroy();
 
   ventasChartInstance = new Chart(ctx, {
     type: "line",
     data: {
       labels: labels,
-      datasets: datasets,
+      datasets: [
+        {
+          label: "Ventas",
+          data: ventasMapeadas,
+          backgroundColor: "rgba(51, 51, 255, 0.2)",
+          borderColor: "#3399ff",
+          borderWidth: 2,
+          tension: 0.3,
+        },
+        {
+          label: "Pagos",
+          data: pagosMapeados,
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "#ff6384",
+          borderWidth: 2,
+          tension: 0.3,
+        }
+      ],
     },
     options: {
       responsive: true,
       plugins: {
         legend: {
           labels: {
-            color: "#ffffff", // color del texto de la leyenda
+            color: colorTexto,
           },
         },
       },
       scales: {
         x: {
           ticks: {
-            color: "#ffffff",
+            color: colorTexto,
           },
           grid: {
-            color: "rgba(255, 255, 255, 0.1)",
+            color: gridColor,
           },
         },
         y: {
           beginAtZero: true,
           ticks: {
-            color: "#ffffff",
+            color: colorTexto,
           },
           grid: {
-            color: "rgba(255, 255, 255, 0.1)",
+            color: gridColor,
           },
         },
       },
@@ -126,12 +107,12 @@ function renderVentasChart(ventasData, pagosData) {
   });
 }
 
+// --- RENDER GRAFICO INGRESOS/EGRESOS ---
 function renderIngresosVsEgresosChart(ingresos, egresos) {
   const ctx = document.getElementById("ingresosEgresosChart").getContext("2d");
+  if (ingresosChartInstance) ingresosChartInstance.destroy();
 
-  if (ingresosChartInstance) {
-    ingresosChartInstance.destroy();
-  }
+  const colorTexto = isDarkMode() ? "#fff" : "#222";
 
   ingresosChartInstance = new Chart(ctx, {
     type: "doughnut",
@@ -143,7 +124,7 @@ function renderIngresosVsEgresosChart(ingresos, egresos) {
       datasets: [
         {
           data: [ingresos, egresos],
-          backgroundColor: ["#10B981", "#EF4444"], // verde, rojo, azul balance
+          backgroundColor: ["#10B981", "#EF4444"],
         },
       ],
     },
@@ -153,13 +134,13 @@ function renderIngresosVsEgresosChart(ingresos, egresos) {
         legend: {
           position: "top",
           labels: {
-            color: "#ffffff",
+            color: colorTexto,
           },
         },
         tooltip: {
-          backgroundColor: "#1f2937",
-          titleColor: "#ffffff",
-          bodyColor: "#ffffff",
+          backgroundColor: isDarkMode() ? "#1f2937" : "#fff",
+          titleColor: colorTexto,
+          bodyColor: colorTexto,
           callbacks: {
             label: function (context) {
               return `${context.label}: $${context.parsed.toFixed(2)}`;
@@ -171,30 +152,23 @@ function renderIngresosVsEgresosChart(ingresos, egresos) {
   });
 }
 
-// Nueva función para invocar ambas con filtro seleccionado
+// --- FUNCIÓN AUXILIAR PARA AMBOS GRAFICOS CON FILTRO ---
 function renderGraficosConFiltro(data, tipo, rangoSeleccionado) {
   let ventas = {};
   let pagos = {};
   if (tipo === "diario") {
     ventas = data.ventas_por_dia;
     pagos = data.egresos_por_dia;
-  }
-  else if (tipo === "semanal") {
+  } else if (tipo === "semanal") {
     ventas = data.ventas_por_semana;
     pagos = data.egresos_por_semana;
-  }
-  else if (tipo === "mensual") {
+  } else if (tipo === "mensual") {
     ventas = data.ventas_por_mes;
     pagos = data.egresos_por_mes;
-  }
-  else if (tipo === "anual") {
+  } else if (tipo === "anual") {
     ventas = data.ventas_anuales;
     pagos = data.egresos_anuales;
   }
-
-  // LOG 5: Qué datos le pasan a la función final
-  console.log("DEBUG - renderGraficosConFiltro > ventas:", ventas);
-  console.log("DEBUG - renderGraficosConFiltro > pagos:", pagos);
 
   renderVentasChart(ventas, pagos);
   renderIngresosVsEgresosChart(
@@ -203,3 +177,16 @@ function renderGraficosConFiltro(data, tipo, rangoSeleccionado) {
     rangoSeleccionado
   );
 }
+
+// --- OPCIONAL: REFRESCAR GRAFICOS AL CAMBIAR MODO ---
+document.addEventListener('DOMContentLoaded', () => {
+  const themeSwitch = document.getElementById('themeSwitch');
+  if (!themeSwitch) return;
+  themeSwitch.addEventListener('change', () => {
+    // Guardá los datos actuales en una variable global si querés mantener la selección del usuario
+    // o simplemente re-renderizá los gráficos con los datos actuales (tendrás que adaptarlo a tu estructura)
+    if (typeof initDashboard === "function") {
+      initDashboard();
+    }
+  });
+});
